@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<title>ユメミボタン v1</title>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.min.js" integrity="sha256-/Q4ZPy6sMbk627wHxuaWSIXS1y7D2KnMhsm/+od7ptE=" crossorigin="anonymous"></script>
+
+<style>
+    body {
+        color: #27bbc8;
+    }
+
+    h1 {
+        margin: 0 0 0.6em;
+        border-bottom: 2px dashed #27BBC8;
+    }
+
+    h2 {
+        margin: 0;
+    }
+
+    button {
+        cursor: pointer;
+        border: none;
+        border: 2px solid #27BBC8;
+        color: #27BBC8;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 0.2em 0.8em;
+        font-size: 1em;
+        border-radius: 0.2em;
+        transition: 0.3s;
+        background-color: #ffffff;
+    }
+
+    button:active {
+        transition: 0s;
+        background-color: #1C2541;
+        border-color: #1C2541;
+        color: #FFF;
+    }
+
+    .sound {
+        display: inline-block;
+        margin: 0.3em 1em 0.3em 0;
+    }
+
+    .add-btn {
+        border-radius: 100%;
+        padding: 0 0.3em;
+    }
+
+    #playlist {
+        margin: 0.6em 0;
+        padding: 0.3em 0;
+        border: 2px dotted #27BBC8;
+        border-width: 2px 0;
+        height: 6em;
+        overflow-y: auto;
+        counter-reset: playlist;
+    }
+
+    #playlist button::before {
+        counter-increment: playlist;
+        content: counter(playlist)". ";
+    }
+
+    #playlist .sound {
+        font-size: 0.7em;
+    }
+
+    .nav button {
+        margin-right: 0.3em;
+    }
+
+</style>
+
+<div class="container">
+    <div id="app">
+        <h1>ユメミボタン v1</h1>
+        <div class="nav">
+            <button v-on:click="playPlaylist">再生</button>
+            <button v-on:click="playPlaylistRandom">ランダム再生</button>
+            <button v-on:click="clearPlaylist">全て削除</button>
+            <button v-on:click="postTweet">Twitterに投稿</button>
+        </div>
+        <div id="playlist">
+            <div v-if="!playlist.length">＊(+)ボタンを押すとプレイリストに追加されます＊</div>
+            <div class="sound" v-for="(sound, index) in playlist">
+                <button class="sound-btn" v-on:click="removePlaylistItem(index)" title="プレイリストから削除">{{ sound.replace(/^\d+\/\d+-(.+)\.m4a$/, "$1") }}</button>
+            </div>
+        </div>
+        <div class="sound" v-for="(sound, index) in sounds">
+            <button class="sound-btn" type="button" v-on:click="playSound(sound)">{{ sound.replace(/^\d+\/\d+-(.+)\.m4a$/, "$1") }}</button>
+            <button class="add-btn" type="button" v-on:click="addToPlaylist(sound)" title="プレイリストに追加">+</button>
+        </div>
+        <div style="margin-top: 3em;">
+            <button v-on:click="playRandomLoop">ランダムループ (止まらない)</button>
+        </div>
+    </div>
+</div>
+
+<script src="./sounds.js"></script>
+
+<script>
+    const app = new Vue({
+        el: '#app',
+        data: {
+            sounds: sounds,
+            playlist: []
+        },
+        mounted: function () {
+            try {
+                if (location.hash) {
+                    let sound_ids = decodeURIComponent(location.hash).slice(1).split(',')
+                    this.playlist = sound_ids.map(id => {
+                        return this.sounds.find(sound => sound.indexOf(id + '-') === 0);
+                    }).filter(Boolean)
+                }
+            } catch (e) {
+                console.error(e)
+            }
+        },
+        methods: {
+            playSound: function (sound) {
+                const audio = new Howl({
+                    src: './sounds/' + sound
+                })
+                audio.play()
+            },
+            playListItemRecursive: function (playlist, index) {
+                if (!playlist[index]) { return }
+                let that = this
+                const audio = new Howl({
+                    src: './sounds/' + playlist[index],
+                    onend: function () {
+                        that.playListItemRecursive(playlist, index + 1)
+                    }
+                })
+                audio.play()
+            },
+            playPlaylist: function () {
+                this.playListItemRecursive(this.playlist, 0)
+            },
+            playPlaylistRandom: function () {
+                this.playListItemRecursive(this.playlist.map((a) => [Math.random(), a]).sort((a, b) => a[0] - b[0]).map((a) => a[1]), 0)
+            },
+            playRandomRecursive: function (playlist, before_index) {
+                let that = this
+                let index = Math.floor(Math.random() * playlist.length)
+                if (before_index == index) {
+                    index = index + 1 % playlist.length
+                }
+                const audio = new Howl({
+                    src: './sounds/' + playlist[index],
+                    onend: function () {
+                        that.playRandomRecursive(playlist, index)
+                    }
+                })
+                audio.play()
+            },
+            playRandomLoop: function () {
+                this.playRandomRecursive(this.sounds)
+            },
+            addToPlaylist: function (sound) {
+                this.playlist.push(sound)
+                this.updateURL()
+            },
+            removePlaylistItem: function (index) {
+                this.playlist.splice(index, 1)
+                this.updateURL()
+            },
+            clearPlaylist: function () {
+                if (confirm("プレイリストを削除します。よろしいですか？")) {
+                    this.playlist.splice(0)
+                    this.updateURL()
+                }
+            },
+            updateURL: function () {
+                location.hash = encodeURIComponent(this.playlist.map(sound => (sound.match(/^(\d+\/\d+)-/) || [,])[1]))
+            },
+            postTweet: function () {
+                if (this.playlist.length == 0) {
+                    alert("プレイリストが空です……！")
+                    return
+                }
+                let url = `http://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent("#ユメミボタン でプレイリストを作成しました！")}`
+                window.open(url)
+            }
+        }
+    })
+</script>
