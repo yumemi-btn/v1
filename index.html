@@ -86,15 +86,16 @@
 
 <div class="container">
     <div id="app">
-        <h1>ユメミボタン v1 <small>- 非公式-</small></h1>
+        <h1>ユメミボタン v1 <small>-非公式-</small></h1>
         <div class="nav">
             <button v-on:click="playPlaylist">再生</button>
             <button v-on:click="playPlaylistRandom">ランダム再生</button>
             <button v-on:click="clearPlaylist">全て削除</button>
             <button v-on:click="postTweet">Twitterに投稿</button>
+            ※ プレイリストはURLに保存されます。
         </div>
         <div id="playlist">
-            <div v-if="!playlist.length">＊(+)ボタンを押すとプレイリストに追加されます＊</div>
+            <div v-if="!playlist.length">＊プレイリストは空です＊<br>(+)ボタンを押すとプレイリストに追加されます</div>
             <div class="sound" v-for="(sound, index) in playlist">
                 <button class="sound-btn" v-on:click="removePlaylistItem(index)" title="プレイリストから削除">{{ sound.replace(/^\d+\/\d+-(.+)\.m4a$/, "$1") }}</button>
             </div>
