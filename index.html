@@ -10,6 +10,10 @@
 
     gtag('config', 'UA-165266281-1');
 </script>
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ユメミボタン v1 -非公式-">
+
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.min.js" integrity="sha256-/Q4ZPy6sMbk627wHxuaWSIXS1y7D2KnMhsm/+od7ptE=" crossorigin="anonymous"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -194,7 +198,8 @@
                     alert("プレイリストが空です……！")
                     return
                 }
-                let url = `http://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent("#ユメミボタン でプレイリストを作成しました！")}`
+                let list = this.playlist.slice(0, 3).map(sound => sound.replace(/^\d+\/\d+-(.+)\.m4a$/, "$1")).join(' -> ')
+                let url = `http://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(`プレイリストを作成しました！ [${list}]`)}&hashtags=${encodeURIComponent('ユメミボタン')}`
                 window.open(url)
             }
         }
