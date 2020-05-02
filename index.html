@@ -34,7 +34,6 @@
 
     button {
         cursor: pointer;
-        border: none;
         border: 2px solid #27BBC8;
         color: #27BBC8;
         text-decoration: none;
@@ -51,6 +50,20 @@
         background-color: #1C2541;
         border-color: #1C2541;
         color: #FFF;
+    }
+
+    #search {
+        margin-bottom: 0.3em;
+    }
+
+    #search input {
+        color: #27bbc8;
+        border-radius: 0.2em;
+        border: 2px solid #27BBC8;
+        padding: 0.2em 0.8em;
+        font-size: 1em;
+        height: 1.5em;
+        width: calc(100% - 5em);
     }
 
     .sound {
@@ -104,7 +117,11 @@
                 <button class="sound-btn" v-on:click="removePlaylistItem(index)" title="プレイリストから削除">{{ sound.replace(/^\d+\/\d+-(.+)\.m4a$/, "$1") }}</button>
             </div>
         </div>
-        <div class="sound" v-for="(sound, index) in sounds">
+        <div id="search">
+            <input type="text" v-model="search" placeholder="キーワードで絞り込み (スペース区切りでOR検索)">
+            <button v-on:click="() => {this.search = ''}" title="キーワードをクリア">✕</button>
+        </div>
+        <div class="sound" v-for="(sound, index) in filtered_sounds">
             <button class="sound-btn" type="button" v-on:click="playSound(sound)">{{ sound.replace(/^\d+\/\d+-(.+)\.m4a$/, "$1") }}</button>
             <button class="add-btn" type="button" v-on:click="addToPlaylist(sound)" title="プレイリストに追加">+</button>
         </div>
@@ -117,11 +134,35 @@
 <script src="./sounds.js"></script>
 
 <script>
+    function hiraToKata(str) {
+        return str.replace(/[\u3041-\u3096]/g, ch =>
+            String.fromCharCode(ch.charCodeAt(0) + 0x60)
+        );
+    }
+</script>
+
+<script>
     const app = new Vue({
         el: '#app',
         data: {
             sounds: sounds,
-            playlist: []
+            playlist: [],
+            search: ''
+        },
+        computed: {
+            filtered_sounds: function () {
+                let querys = this.search.split(/\s+/)
+
+                if (this.search.trim()) {
+                    return this.sounds.filter(sound => {
+                        return querys.find(query => {
+                            return hiraToKata(sound).includes(hiraToKata(query))
+                        })
+                    })
+                } else {
+                    return this.sounds
+                }
+            }
         },
         mounted: function () {
             try {
