@@ -52,6 +52,24 @@
         color: #FFF;
     }
 
+    .sound-btn {
+        position: relative;
+    }
+
+    .sound-btn.new::before {
+        content: "New";
+        letter-spacing: 0;
+        font-size: 0.6em;
+        background-color: #27BBC8;
+        padding: 2px;
+        border-radius: 4px;
+        display: black;
+        position: absolute;
+        top: -0.7em;
+        left: -1em;
+        color: #ffffff;
+    }
+
     #search {
         margin-bottom: 0.3em;
     }
@@ -122,7 +140,7 @@
             <button v-on:click="() => {this.search = ''}" title="キーワードをクリア">✕</button>
         </div>
         <div class="sound" v-for="(sound, index) in filtered_sounds">
-            <button class="sound-btn" type="button" v-on:click="playSound(sound)">{{ sound.replace(/^\d+\/\d+-(.+)\.m4a$/, "$1") }}</button>
+            <button class="sound-btn" v-bind:class="{ new: sound.indexOf('200505/') === 0 }" type="button" v-on:click="playSound(sound)">{{ sound.replace(/^\d+\/\d+-(.+)\.m4a$/, "$1") }}</button>
             <button class="add-btn" type="button" v-on:click="addToPlaylist(sound)" title="プレイリストに追加">+</button>
         </div>
         <div style="margin-top: 3em;">
