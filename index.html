@@ -12,7 +12,7 @@
 </script>
 
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ユメミボタン v1 -非公式-">
+<meta name="twitter:title" content="ユメミボタン v1">
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.min.js" integrity="sha256-/Q4ZPy6sMbk627wHxuaWSIXS1y7D2KnMhsm/+od7ptE=" crossorigin="anonymous"></script>
@@ -23,8 +23,12 @@
         color: #27bbc8;
     }
 
+    a {
+        color: #1C2541;
+    }
+
     h1 {
-        margin: 0 0 0.6em;
+        margin: 0;
         border-bottom: 2px dashed #27BBC8;
     }
 
@@ -113,6 +117,10 @@
         font-size: 0.7em;
     }
 
+    .description {
+        margin: 0.3em 0;
+    }
+
     .nav button {
         margin-right: 0.3em;
     }
@@ -122,11 +130,16 @@
 <div class="container">
     <div id="app">
         <h1>ユメミボタン v1 <small>-非公式-</small></h1>
+        <div class="description">
+            台湾でねこちゃんに憧れる罵倒ロリママ<a href="https://kumonoueyumemi.jimdofree.com/" target="_blank">くもの上ユメミ</a> <small>(<a href="https://www.youtube.com/channel/UCRUFY2ZCyVOvC-1rJIVZlKg" target="_blank">Youtube</a> <a href="https://twitter.com/Kumonoue_Yumemi" target="_blank">Twitter</a>)</small> ちゃんの非公式ボタンです。<br>
+            現在 {{ sounds.length }} 個のボイスが登録されてるよ！ <a href="https://github.com/yumemi-btn/v1/archive/master.zip" target="_blank">ZIPで一括ダウンロード</a>も出来るよ！ / Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a>
+
+        </div>
         <div class="nav">
             <button v-on:click="playPlaylist">再生</button>
             <button v-on:click="playPlaylistRandom">ランダム再生</button>
             <button v-on:click="clearPlaylist">全て削除</button>
-            <button v-on:click="postTweet">Twitterに投稿</button>
+            <button v-on:click="postTweet">プレイリストをTwitterに投稿</button>
             ※ プレイリストはURLに保存されます。
         </div>
         <div id="playlist">
@@ -258,7 +271,7 @@
                     return
                 }
                 let list = this.playlist.slice(0, 3).map(sound => sound.replace(/^\d+\/\d+-(.+)\.m4a$/, "$1")).join(' -> ')
-                let url = `http://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(`プレイリストを作成しました！ [${list}]`)}&hashtags=${encodeURIComponent('ユメミボタン')}`
+                let url = `http://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(`プレイリストを作成しました！ [${list}]`)}&hashtags=${encodeURIComponent('ユメミボタン,くもユメ')}`
                 window.open(url)
             }
         }
