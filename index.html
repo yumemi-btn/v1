@@ -97,7 +97,8 @@
         margin: 0.3em 1em 0.3em 0;
     }
 
-    .add-btn {
+    .add-btn,
+    .delete-btn {
         border-radius: 100%;
         padding: 0 0.3em;
     }
@@ -112,7 +113,7 @@
         counter-reset: playlist;
     }
 
-    #playlist button::before {
+    #playlist button.sound-btn::before {
         counter-increment: playlist;
         content: counter(playlist)". ";
     }
@@ -149,7 +150,8 @@
         <div id="playlist">
             <div v-if="!playlist.length">＊プレイリストは空です＊<br>(+)ボタンを押すとプレイリストに追加されます</div>
             <div class="sound" v-for="(sound, index) in playlist">
-                <button class="sound-btn" v-on:click="removePlaylistItem(index)" title="プレイリストから削除">{{ sound.replace(/^\d+\/\d+-(.+)\.m4a$/, "$1") }}</button>
+                <button class="sound-btn" v-on:click="playSound(sound)" title="再生">{{ sound.replace(/^\d+\/\d+-(.+)\.m4a$/, "$1") }}</button>
+                <button class="delete-btn" v-on:click="removePlaylistItem(index)" title="プレイリストから削除">x</button>
             </div>
         </div>
         <div id="search">
@@ -157,8 +159,8 @@
             <button v-on:click="() => {this.search = ''}" title="キーワードをクリア">✕</button>
         </div>
         <div class="sound" v-for="(sound, index) in filtered_sounds">
-            <button class="sound-btn" v-bind:class="{ new: sound.indexOf(new_sounds) === 0 }" type="button" v-on:click="playSound(sound)">{{ sound.replace(/^\d+\/\d+-(.+)\.m4a$/, "$1") }}</button>
-            <button class="add-btn" type="button" v-on:click="addToPlaylist(sound)" title="プレイリストに追加">+</button>
+            <button class="sound-btn" v-bind:class="{ new: sound.indexOf(new_sounds) === 0 }" type="button" v-on:click="playSound(sound)" title="再生">{{ sound.replace(/^\d+\/\d+-(.+)\.m4a$/, "$1") }}</button>
+            <button class="add-btn" v-on:click="addToPlaylist(sound)" title="プレイリストに追加">+</button>
         </div>
         <div style="margin-top: 3em;">
             <button v-on:click="playRandomLoop">ランダムループ (止まらない)</button>
@@ -200,16 +202,7 @@
             }
         },
         mounted: function () {
-            try {
-                if (location.hash) {
-                    let sound_ids = location.hash.slice(1).split(',')
-                    this.playlist = sound_ids.map(id => {
-                        return this.sounds.find(sound => sound.indexOf(id + '-') === 0);
-                    }).filter(Boolean)
-                }
-            } catch (e) {
-                console.error(e)
-            }
+            this.loadPlaylist()
         },
         methods: {
             playSound: function (sound) {
@@ -266,6 +259,18 @@
                     this.updateURL()
                 }
             },
+            loadPlaylist: function () {
+                try {
+                    if (location.hash) {
+                        let sound_ids = location.hash.slice(1).split(',')
+                        this.playlist = sound_ids.map(id => {
+                            return this.sounds.find(sound => sound.indexOf(id + '-') === 0);
+                        }).filter(Boolean)
+                    }
+                } catch (e) {
+                    console.error(e)
+                }
+            },
             updateURL: function () {
                 location.hash = this.playlist.map(sound => (sound.match(/^(\d+\/\d+)-/) || [,])[1])
             },
@@ -280,4 +285,7 @@
             }
         }
     })
+
+    window.addEventListener("hashchange", () => (app.loadPlaylist()))
+
 </script>
