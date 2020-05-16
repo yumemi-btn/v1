@@ -278,7 +278,8 @@
         <button v-on:click="playSoundList(playlist)">再生</button>
         <button v-on:click="playSoundListRandom(playlist)">ランダム再生</button>
         <button v-on:click="clearPlaylist">全て削除</button>
-        <button v-on:click="postTweet">プレイリストをTwitterに投稿</button>
+        <button v-on:click="postTweet('ユメミボタン,くもユメ')">プレイリストをTwitterに投稿</button>
+        <button v-on:click="postTweet('ユメミボタンR')"><small>R指定投稿</small></button>
         ※ プレイリストはURLに保存されます。
     </div>
     <div id="playlist" class="playlist">
@@ -449,13 +450,13 @@
                     this.playlist.splice(0)
                 }
             },
-            postTweet: function () {
+            postTweet: function (tags) {
                 if (this.playlist.length == 0) {
                     alert("プレイリストが空です……！")
                     return
                 }
                 let list = this.playlist.slice(0, 3).map(sound => sound.name).join(' -> ')
-                let url = `https://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(`プレイリストを作成しました！ [${list}]`)}&hashtags=${encodeURIComponent('ユメミボタン,くもユメ')}`
+                let url = `https://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(`プレイリストを作成しました！ [${list}]`)}&hashtags=${encodeURIComponent(tags)}`
                 window.open(url)
             },
             onScroll: function () {
