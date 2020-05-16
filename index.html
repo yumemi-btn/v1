@@ -24,6 +24,7 @@
     <script src="//cdn.jsdelivr.net/npm/vue@2.6.11"></script>
     <script src="//cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/15.0.0/vuedraggable.min.js" integrity="sha256-kZmY4LUwE53ceTqZXPto8gMELhExZWBrmzOCZgzyY0Y=" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/vue-context-menu@2.0.6/vue-context-menu.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.min.js" integrity="sha256-/Q4ZPy6sMbk627wHxuaWSIXS1y7D2KnMhsm/+od7ptE=" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
@@ -254,6 +255,17 @@
         visibility: visible;
     }
 
+    .menuitem {
+        cursor: pointer;
+        padding: 0 0.6em;
+        text-align: center;
+    }
+
+    .menuitem:hover {
+        background-color: #1E9199;
+        color: #fff;
+    }
+
 </style>
 
 <div id="app" v-cloak v-bind:class="{ playlist_fixed: playlist_fixed, filtered: filtered }">
@@ -302,8 +314,8 @@
             </header>
             <div class="episode-content">
                 <div class="sound" v-for="(sound, index) in (filtered ? episode.filtered_sounds : episode.sounds)">
-                    <button class="sound-btn" type="button" v-on:click="playSound(sound)" title="再生">{{ sound.name }}</button>
-                    <button class="add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
+                    <button class="sound-btn" type="button" v-on:click="playSound(sound)" title="再生" @contextmenu.prevent="$refs.ctx.open($event, sound)">{{ sound.name }}</button>
+                    <button class=" add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
                 </div>
             </div>
         </article>
@@ -313,6 +325,12 @@
         <button v-on:click="playSoundListRandom(sound_list_filtered)">今見えているもの全てをランダム再生</button>
     </div>
     <div class="gotoTop" v-on:click="scrollTo(0, 0)">goto top</div>
+
+    <context-menu id="context-menu" ref="ctx" @ctx-open="(event) => {this.sound = event}">
+        <li class="menuitem" @click="openSound(sound)">新しいタブで開く</li>
+        <li class="menuitem" @click="downloadSound(sound)">ダウンロード</li>
+    </context-menu>
+    <a download id="downloadLink" style="display:none;"></a>
 </div>
 
 <script src="./sounds.js"></script>
@@ -326,14 +344,20 @@
 </script>
 
 <script>
+    const contextMenu = window.VueContextMenu
+    const downloadLink = document.getElementById("downloadLink")
+
     const app = new Vue({
         el: '#app',
+        components: {
+            contextMenu
+        },
         data: {
             episodes: episodes,
             playlist: [],
             playlist_fixed: false,
             search: '',
-            category: ''
+            category: '',
         },
         computed: {
             filtered: function () {
@@ -442,6 +466,14 @@
                 } else {
                     this.playlist_fixed = false
                 }
+            },
+            openSound: function (sound) {
+                window.open(sound.filepath, '_blank')
+            },
+            downloadSound: function (sound) {
+                downloadLink.href = sound.filepath
+                downloadLink.click()
+                downloadLink.removeAttribute('href')
             }
         }
     })
