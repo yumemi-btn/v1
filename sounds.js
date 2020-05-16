@@ -3,7 +3,7 @@ var episodes = [
         date: '2020/05/14',
         title: '台湾のコンビニにある回るウインナー食べる【#くもユメ】',
         youtube: 'pbP0eIC9YQ0',
-        new: false,
+        new: true,
         sounds: [
             { id: '200514/01', category: 'てんぱり', name: 'スイマセン', filepath: './sounds/200514/01-スイマセン.m4a' },
             { id: '200514/02', category: 'てんぱり', name: '開始早々やらかしたかも', filepath: './sounds/200514/02-開始早々やらかしたかも.m4a' },
@@ -496,7 +496,7 @@ var episodes = [
         date: '2020/04/23',
         title: '今日はママやめます【#くもユメ】',
         youtube: 'h64mOsJsR8w',
-        new: true,
+        new: false,
         sounds: [
             { id: '200423/01', category: '挨拶', name: '高いところから失礼します くもの上ユメミでーす いぇいいぇい', filepath: './sounds/200423/01-高いところから失礼します くもの上ユメミでーす いぇいいぇい.m4a' },
             { id: '200423/02', category: '挨拶', name: 'ワンシャンハオ アンアン', filepath: './sounds/200423/02-ワンシャンハオ アンアン.m4a' },
@@ -1126,7 +1126,7 @@ var episodes = [
         date: '',
         title: '素材集',
         youtube: '',
-        new: false,
+        new: true,
         sounds: [
             { id: '990101/01', category: 'カウント', name: '無音0.25秒', filepath: './sounds/990101/01-無音0.25秒.m4a' },
             { id: '990101/02', category: 'カウント', name: '無音0.5秒', filepath: './sounds/990101/02-無音0.5秒.m4a' },
