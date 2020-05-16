@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>ユメミボタン v1 -非公式-</title>
+    <title>ユメミボタン v1.1 -非公式-</title>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165266281-1"></script>
     <script>
@@ -15,20 +15,23 @@
     <meta name="google-site-verification" content="lmaQiF69AsC9ti8OOHnhlaOCH7I5qOgr1EhD2QVTcb4" />
 
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="ユメミボタン v1">
+    <meta name="twitter:title" content="ユメミボタン">
     <meta name="twitter:image" content="https://yumemi-btn.github.io/v1/assets/card.png">
-    
+
     <link rel="icon" href="https://yumemi-btn.github.io/v1/assets/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="https://yumemi-btn.github.io/v1/assets/apple-touch-icon.png">
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.min.js" integrity="sha256-/Q4ZPy6sMbk627wHxuaWSIXS1y7D2KnMhsm/+od7ptE=" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="//cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/15.0.0/vuedraggable.min.js" integrity="sha256-kZmY4LUwE53ceTqZXPto8gMELhExZWBrmzOCZgzyY0Y=" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.min.js" integrity="sha256-/Q4ZPy6sMbk627wHxuaWSIXS1y7D2KnMhsm/+od7ptE=" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
 
 <style>
     body {
         color: #27bbc8;
+        font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
     }
 
     a {
@@ -38,6 +41,8 @@
     h1 {
         margin: 0;
         border-bottom: 2px dashed #27BBC8;
+        overflow: hidden;
+        white-space: nowrap;
     }
 
     h2 {
@@ -46,68 +51,89 @@
 
     button {
         cursor: pointer;
-        border: 2px solid #27BBC8;
-        color: #27BBC8;
+        border: 1px solid #1E9199;
+        color: #1E9199;
         text-decoration: none;
-        font-weight: bold;
-        padding: 0.2em 0.8em;
-        font-size: 1em;
+        font-weight: normal;
+        padding: 0.1em 0.4em;
+        font-size: 0.95em;
         border-radius: 0.2em;
         transition: 0.3s;
         background-color: #ffffff;
     }
 
-    button:active {
+    button:active,
+    .playlist_drag .sortable-ghost button.sound-btn,
+    .playlist_drag .sortable-chosen button:active {
         transition: 0s;
         background-color: #1C2541;
         border-color: #1C2541;
         color: #FFF;
     }
 
-    .sound-btn {
-        position: relative;
-    }
-
-    .sound-btn.new::before {
-        content: "New";
-        letter-spacing: 0;
-        font-size: 0.6em;
-        background-color: #27BBC8;
-        padding: 2px;
-        border-radius: 4px;
-        display: black;
-        position: absolute;
-        top: -0.7em;
-        left: -1em;
-        color: #ffffff;
-    }
-
-    #search {
-        margin-bottom: 0.3em;
-    }
-
-    #search input {
-        color: #27bbc8;
-        border-radius: 0.2em;
-        border: 2px solid #27BBC8;
-        padding: 0.2em 0.8em;
-        font-size: 1em;
-        height: 1.5em;
-        width: calc(100% - 5em);
+    .playlist_drag button:active {
+        transition: 0s;
+        background-color: #ffffff;
+        border: 1px solid #1E9199;
+        color: #1E9199;
     }
 
     .sound {
         display: inline-block;
-        margin: 0.3em 1em 0.3em 0;
+        margin: 0.3em 0.8em 0.3em 0;
+        max-width: calc(100% - 2em);
+        white-space: nowrap;
     }
+
 
     .add-btn,
     .delete-btn {
         border-radius: 100%;
         padding: 0 0.3em;
+        user-select: none;
+        font-size: 1em;
     }
 
-    #playlist {
+    .sound-btn {
+        overflow: hidden;
+        white-space: normal;
+        text-overflow: ellipsis;
+    }
+
+    .search-form input {
+        color: #1E9199;
+        border-radius: 0.2em;
+        border: 1px solid #1E9199;
+        padding: 0.2em 0.8em;
+        font-size: 1em;
+        width: calc(100% - 8rem);
+        box-sizing: border-box;
+        height: 2rem;
+        vertical-align: middle;
+    }
+
+    .search-form button {
+        vertical-align: middle;
+        box-sizing: border-box;
+        height: 2rem;
+        width: 7rem;
+        text-align: center;
+        line-height: 0;
+    }
+
+    .search-category {
+        margin-left: 0.2em;
+    }
+
+    .search-category button {
+        border-bottom: none;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        padding: 0 0.8em;
+        line-height: 1.6em;
+    }
+
+    .playlist {
         margin: 0.6em 0;
         padding: 0.3em 0;
         border: 2px dotted #27BBC8;
@@ -117,12 +143,27 @@
         counter-reset: playlist;
     }
 
-    #playlist button.sound-btn::before {
+    .playlist_fixed .playlist_content {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5em;
+        overflow-y: auto;
+        background-color: #fff;
+        margin: 0;
+        border: none;
+        box-shadow: 0 0 3px #27BBC8;
+        padding: 8px;
+        border-bottom: 3px solid #27BBC8;
+    }
+
+    .playlist button.sound-btn::before {
         counter-increment: playlist;
         content: counter(playlist)". ";
     }
 
-    #playlist .sound {
+    .playlist .sound {
         font-size: 0.7em;
     }
 
@@ -134,42 +175,143 @@
         margin-right: 0.3em;
     }
 
+    .episode {
+        clear: both;
+        margin-top: 1em;
+        overflow: hidden;
+        zoom: 1;
+    }
+
+    .episode-content {
+        clear: left;
+    }
+
+    .episode-title {
+        float: left;
+        border-left: 0.3em solid;
+        padding-left: 0.2em;
+        margin-bottom: 0.2em
+    }
+
+    .new .episode-title::after {
+        content: "New!";
+        letter-spacing: 0;
+        background-color: #27BBC8;
+        padding: 0 0.6em;
+        border-radius: 4px;
+        display: black;
+        color: #ffffff;
+    }
+
+    .episode-thumbnail {
+        float: right;
+        border: 1px solid #27BBC8;
+        line-height: 0;
+    }
+
+    .episode-thumbnail img {
+        width: 320px;
+        height: 180px;
+    }
+
+    .filtered .episode-thumbnail img {
+        width: 160px;
+        height: 90px;
+    }
+
+    [v-cloak]>div {
+        opacity: 0.4;
+    }
+
+    [v-cloak]::after {
+        content: "NowLoading...";
+        font-size: 3em;
+        display: block;
+        position: fixed;
+        text-align: center;
+        top: calc(50% - 1em);
+        left: 0;
+        right: 0;
+        line-height: 2;
+        background-color: #27BBC8;
+        color: #fff;
+    }
+
+    .gotoTop {
+        visibility: hidden;
+        position: fixed;
+        bottom: 0.3em;
+        right: 0.3em;
+        padding: 0.3em 0.6em;
+        user-select: none;
+        cursor: pointer;
+        color: #fff;
+        background-color: #27BBC8;
+    }
+
+    .playlist_fixed .gotoTop {
+        visibility: visible;
+    }
+
 </style>
 
-<div class="container">
-    <div id="app">
-        <h1>ユメミボタン v1 <small>-非公式-</small></h1>
-        <div class="description">
-            台湾でねこちゃんに憧れる罵倒ロリママ<a href="https://kumonoueyumemi.jimdofree.com/" target="_blank">くもの上ユメミ</a> <small>(<a href="https://www.youtube.com/channel/UCRUFY2ZCyVOvC-1rJIVZlKg" target="_blank">Youtube</a> <a href="https://twitter.com/Kumonoue_Yumemi" target="_blank">Twitter</a>)</small> ちゃんの非公式ボタンです。<br>
-            現在 {{ sounds.length }} 個のボイスが登録されてるよ！ <a href="https://github.com/yumemi-btn/v1/archive/master.zip" target="_blank">ZIPで一括ダウンロード</a>も出来るよ！ <small>(<a href="https://github.com/yumemi-btn/v1/blob/master/README.md" target="_blank">利用規約</a>を読んでね)</small> / Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a>
-
-        </div>
-        <div class="nav">
-            <button v-on:click="playPlaylist">再生</button>
-            <button v-on:click="playPlaylistRandom">ランダム再生</button>
-            <button v-on:click="clearPlaylist">全て削除</button>
-            <button v-on:click="postTweet">プレイリストをTwitterに投稿</button>
-            ※ プレイリストはURLに保存されます。
-        </div>
-        <div id="playlist">
-            <div v-if="!playlist.length">＊プレイリストは空です＊<br>(+)ボタンを押すとプレイリストに追加されます</div>
-            <div class="sound" v-for="(sound, index) in playlist">
-                <button class="sound-btn" v-on:click="playSound(sound)" title="再生">{{ sound.replace(/^\d+\/\d+-(.+)\.m4a$/, "$1") }}</button>
-                <button class="delete-btn" v-on:click="removePlaylistItem(index)" title="プレイリストから削除">x</button>
-            </div>
-        </div>
-        <div id="search">
-            <input type="text" v-model="search" placeholder="キーワードで絞り込み (スペース区切りでOR検索)">
-            <button v-on:click="() => {this.search = ''}" title="キーワードをクリア">✕</button>
-        </div>
-        <div class="sound" v-for="(sound, index) in filtered_sounds">
-            <button class="sound-btn" v-bind:class="{ new: sound.indexOf(new_sounds) === 0 }" type="button" v-on:click="playSound(sound)" title="再生">{{ sound.replace(/^\d+\/\d+-(.+)\.m4a$/, "$1") }}</button>
-            <button class="add-btn" v-on:click="addToPlaylist(sound)" title="プレイリストに追加">+</button>
-        </div>
-        <div style="margin-top: 3em;">
-            <button v-on:click="playRandomLoop">ランダムループ (止まらない)</button>
+<div id="app" v-cloak v-bind:class="{ playlist_fixed: playlist_fixed, filtered: filtered }">
+    <h1>ユメミボタン v1.1 <small>-非公式-</small></h1>
+    <div class="description">
+        台湾でねこちゃんに憧れる罵倒ロリママ<a href="https://kumonoueyumemi.jimdofree.com/" target="_blank">くもの上ユメミ</a> <small>(<a href="https://www.youtube.com/channel/UCRUFY2ZCyVOvC-1rJIVZlKg" target="_blank">Youtube</a> <a href="https://twitter.com/Kumonoue_Yumemi" target="_blank">Twitter</a>)</small> ちゃんの非公式ボタンです。<br>
+        現在 {{ sound_list.length }} 個のボイスが登録されてるよ！ <a href="https://github.com/yumemi-btn/v1/archive/master.zip" target="_blank">ZIPで一括ダウンロード</a>も出来るよ！ <small>(<a href="https://github.com/yumemi-btn/v1/blob/master/README.md" target="_blank">利用規約</a>を読んでね)</small> / Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a>
+    </div>
+    <div class="nav">
+        <button v-on:click="playSoundList(playlist)">再生</button>
+        <button v-on:click="playSoundListRandom(playlist)">ランダム再生</button>
+        <button v-on:click="clearPlaylist">全て削除</button>
+        <button v-on:click="postTweet">プレイリストをTwitterに投稿</button>
+        ※ プレイリストはURLに保存されます。
+    </div>
+    <div id="playlist" class="playlist">
+        <div class="playlist_content">
+            <div v-if="!playlist.length">＊プレイリストは空です＊<br>(+)ボタンを押すとプレイリストに追加されます。追加後にドラッグ＆ドロップで並び替えも出来るよ！</div>
+            <draggable :list="playlist" class="playlist_drag">
+                <div class="sound" v-for="(sound, index) in playlist">
+                    <button class="sound-btn" v-on:click="playSound(sound)" title="再生">{{ sound.name }}</button>
+                    <button class="delete-btn" v-on:click="playlist.splice(index, 1)" title="プレイリストから削除">x</button>
+                </div>
+            </draggable>
         </div>
     </div>
+    <div class="search">
+        <div class="search-category">
+            <button v-for="(category, index) in category_list" v-on:click="setCategory(category)">{{ category }}</button>
+            <button v-on:click="() => {this.search = ''; this.category = ''}" title="キーワード/カテゴリをクリア">✕</button>
+        </div>
+        <div class="search-form">
+            <input type="text" v-model="search" placeholder="キーワードで絞り込み (スペース区切りでOR検索)" v-bind:disabled="!!this.category">
+            <button v-on:click="() => {this.search = ''; this.category = ''}" title="キーワード/カテゴリをクリア">✕</button>
+        </div>
+    </div>
+    <div class="content">
+        <article class="episode" v-for="(episode, index) in episodes" v-bind:class="{ new: episode.new }" v-if="!filtered || episode.filtered_sounds.length">
+            <header>
+                <h2 class="episode-title"><span v-if="episode.date">{{ episode.date}} - </span>{{ episode.title }}</h2>
+                <div class="episode-thumbnail" v-if="episode.youtube">
+                    <a v-bind:href="`https://www.youtube.com/watch?v=${episode.youtube}`" target="_blank">
+                        <img v-bind:src="`http://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg`">
+                    </a>
+                </div>
+            </header>
+            <div class="episode-content">
+                <div class="sound" v-for="(sound, index) in (filtered ? episode.filtered_sounds : episode.sounds)">
+                    <button class="sound-btn" type="button" v-on:click="playSound(sound)" title="再生">{{ sound.name }}</button>
+                    <button class="add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
+                </div>
+            </div>
+        </article>
+    </div>
+    <div style="margin-top: 3em;">
+        <button v-on:click="playSoundListRandom(sound_list)">全てをランダム再生</button>
+        <button v-on:click="playSoundListRandom(sound_list_filtered)">今見えているもの全てをランダム再生</button>
+    </div>
+    <div class="gotoTop" v-on:click="scrollTo(0, 0)">goto top</div>
 </div>
 
 <script src="./sounds.js"></script>
@@ -178,7 +320,7 @@
     function hiraToKata(str) {
         return str.replace(/[\u3041-\u3096]/g, ch =>
             String.fromCharCode(ch.charCodeAt(0) + 0x60)
-        );
+        )
     }
 </script>
 
@@ -186,110 +328,123 @@
     const app = new Vue({
         el: '#app',
         data: {
-            sounds: sounds,
+            episodes: episodes,
             playlist: [],
-            search: ''
+            playlist_fixed: false,
+            search: '',
+            category: ''
         },
         computed: {
-            filtered_sounds: function () {
-                let querys = this.search.split(/\s+/)
-
-                if (this.search.trim()) {
-                    return this.sounds.filter(sound => {
-                        return querys.find(query => {
-                            return hiraToKata(sound).includes(hiraToKata(query))
+            filtered: function () {
+                return !!(this.querys) || !!(this.category)
+            },
+            querys: function () {
+                if (!this.category && this.search.trim()) {
+                    return this.search.split(/\s+/)
+                } else {
+                    return false
+                }
+            },
+            sound_list: function () {
+                return [].concat(...this.episodes.map(episode => episode.sounds))
+            },
+            sound_list_filtered: function () {
+                return [].concat(...this.episodes.map(episode => episode.filtered_sounds))
+            },
+            category_list: function () {
+                return [...new Set(this.sound_list.map(sound => sound.category))].sort().filter(Boolean)
+            }
+        },
+        watch: {
+            playlist: function () {
+                location.hash = this.playlist.map(sound => sound.id).join(',')
+            },
+            querys: function () {
+                if (!this.querys) { return }
+                this.episodes.forEach(episode => {
+                    episode.filtered_sounds = episode.sounds.filter(sound => {
+                        return this.querys.find(query => {
+                            return hiraToKata(sound.name).includes(hiraToKata(query))
                         })
                     })
-                } else {
-                    return this.sounds
-                }
+                })
+            },
+            category: function () {
+                if (!this.category) { return }
+                this.episodes.forEach(episode => {
+                    episode.filtered_sounds = episode.sounds.filter(sound => {
+                        return sound.category === this.category
+                    })
+                })
+                this.search = `＊カテゴリ 「${this.category}」 を表示中＊`
             }
         },
         mounted: function () {
             this.loadPlaylist()
         },
         methods: {
-            playSound: function (sound) {
-                const audio = new Howl({
-                    src: './sounds/' + sound
+            playSound: async function (sound) {
+                sound.isPlaying = true
+                return new Promise(resolve => {
+                    (new Howl({
+                        src: sound.filepath,
+                        onend: () => {
+                            sound.isPlaying = false
+                            resolve()
+                        }
+                    })).play()
                 })
-                audio.play()
             },
-            playListItemRecursive: function (playlist, index) {
-                if (!playlist[index]) { return }
-                let that = this
-                const audio = new Howl({
-                    src: './sounds/' + playlist[index],
-                    onend: function () {
-                        that.playListItemRecursive(playlist, index + 1)
-                    }
-                })
-                audio.play()
-            },
-            playPlaylist: function () {
-                this.playListItemRecursive(this.playlist, 0)
-            },
-            playPlaylistRandom: function () {
-                this.playListItemRecursive(this.playlist.map((a) => [Math.random(), a]).sort((a, b) => a[0] - b[0]).map((a) => a[1]), 0)
-            },
-            playRandomRecursive: function (playlist, before_index) {
-                let that = this
-                let index = Math.floor(Math.random() * playlist.length)
-                if (before_index == index) {
-                    index = index + 1 % playlist.length
+            playSoundList: async function (soundlist) {
+                for (const sound of soundlist) {
+                    await this.playSound(sound)
                 }
-                const audio = new Howl({
-                    src: './sounds/' + playlist[index],
-                    onend: function () {
-                        that.playRandomRecursive(playlist, index)
-                    }
-                })
-                audio.play()
             },
-            playRandomLoop: function () {
-                this.playRandomRecursive(this.sounds)
+            playSoundListRandom: async function (soundlist) {
+                await this.playSoundList(soundlist.map((a) => [Math.random(), a]).sort((a, b) => a[0] - b[0]).map((a) => a[1]))
             },
-            addToPlaylist: function (sound) {
-                this.playlist.push(sound)
-                this.updateURL()
-            },
-            removePlaylistItem: function (index) {
-                this.playlist.splice(index, 1)
-                this.updateURL()
-            },
-            clearPlaylist: function () {
-                if (confirm("プレイリストを削除します。よろしいですか？")) {
-                    this.playlist.splice(0)
-                    this.updateURL()
-                }
+            setCategory: function (category) {
+                this.category = category
             },
             loadPlaylist: function () {
                 try {
                     if (location.hash) {
                         let sound_ids = location.hash.slice(1).split(',')
+
                         this.playlist = sound_ids.map(id => {
-                            return this.sounds.find(sound => sound.indexOf(id + '-') === 0);
+                            return this.sound_list.find(sound => sound.id === id);
                         }).filter(Boolean)
                     }
                 } catch (e) {
                     console.error(e)
                 }
             },
-            updateURL: function () {
-                location.hash = this.playlist.map(sound => (sound.match(/^(\d+\/\d+)-/) || [,])[1])
+            clearPlaylist: function () {
+                if (confirm("プレイリストを削除します。よろしいですか？")) {
+                    this.playlist.splice(0)
+                }
             },
             postTweet: function () {
                 if (this.playlist.length == 0) {
                     alert("プレイリストが空です……！")
                     return
                 }
-                let list = this.playlist.slice(0, 3).map(sound => sound.replace(/^\d+\/\d+-(.+)\.m4a$/, "$1")).join(' -> ')
+                let list = this.playlist.slice(0, 3).map(sound => sound.name).join(' -> ')
                 let url = `http://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(`プレイリストを作成しました！ [${list}]`)}&hashtags=${encodeURIComponent('ユメミボタン,くもユメ')}`
                 window.open(url)
+            },
+            onScroll: function () {
+                let playlist_elm = document.getElementById('playlist')
+                let rect = playlist_elm.getBoundingClientRect()
+                if (rect.top <= 0) {
+                    this.playlist_fixed = true
+                } else {
+                    this.playlist_fixed = false
+                }
             }
         }
     })
 
-    window.addEventListener("hashchange", () => (app.loadPlaylist()))
-
+    window.addEventListener("hashchange", app.loadPlaylist)
+    window.addEventListener("scroll", app.onScroll)
 </script>
