@@ -295,7 +295,7 @@
                 <h2 class="episode-title"><span v-if="episode.date">{{ episode.date}} - </span>{{ episode.title }}</h2>
                 <div class="episode-thumbnail" v-if="episode.youtube">
                     <a v-bind:href="`https://www.youtube.com/watch?v=${episode.youtube}`" target="_blank">
-                        <img v-bind:src="`http://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg`">
+                        <img v-bind:src="`https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg`">
                     </a>
                 </div>
             </header>
@@ -430,7 +430,7 @@
                     return
                 }
                 let list = this.playlist.slice(0, 3).map(sound => sound.name).join(' -> ')
-                let url = `http://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(`プレイリストを作成しました！ [${list}]`)}&hashtags=${encodeURIComponent('ユメミボタン,くもユメ')}`
+                let url = `https://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(`プレイリストを作成しました！ [${list}]`)}&hashtags=${encodeURIComponent('ユメミボタン,くもユメ')}`
                 window.open(url)
             },
             onScroll: function () {
