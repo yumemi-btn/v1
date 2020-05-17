@@ -159,6 +159,17 @@
         border-bottom: 3px solid #27BBC8;
     }
 
+    @media screen and (max-width: 480px) {
+        .playlist {
+            height: 12em;
+            padding-right: 3em;
+        }
+
+        .playlist_fixed .playlist_content {
+            padding-right: 3em;
+        }
+    }
+
     .playlist button.sound-btn::before {
         counter-increment: playlist;
         content: counter(playlist)". ";
