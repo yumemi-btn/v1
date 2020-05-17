@@ -309,7 +309,7 @@
                 <h2 class="episode-title"><span v-if="episode.date">{{ episode.date}} - </span>{{ episode.title }}</h2>
                 <div class="episode-thumbnail" v-if="episode.youtube">
                     <a v-bind:href="`https://www.youtube.com/watch?v=${episode.youtube}`" target="_blank">
-                        <img v-bind:src="`https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg`">
+                        <img v-bind:src="`https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg`" v-bind:srcset="`https://img.youtube.com/vi/${episode.youtube}/mqdefault.jpg 1x, https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg 2x`" loading="lazy">
                     </a>
                 </div>
             </header>
