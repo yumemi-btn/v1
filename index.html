@@ -236,6 +236,11 @@
         opacity: 0.4;
     }
 
+    [v-cloak] .playlist_loaded,
+    [v-cloak] #context-menu {
+        display: none;
+    }
+
     [v-cloak]::after {
         content: "NowLoading...";
         font-size: 3em;
@@ -277,6 +282,34 @@
         color: #fff;
     }
 
+    .playlist_loaded {
+        margin-bottom: 1.1em;
+    }
+
+    .playlist_loaded .popup {
+        position: relative;
+        background: #27BBC8;
+        padding: 0.3em 0.6em;
+        color: #fff;
+        border-radius: 0.2em;
+        font-size: 0.9em;
+        font-weight: bold;
+    }
+
+    .playlist_loaded .popup:after {
+        border: solid transparent;
+        content: '';
+        height: 0;
+        width: 0;
+        pointer-events: none;
+        position: absolute;
+        border-color: transparent;
+        border-width: 0.8em;
+        border-top-color: #27BBC8;
+        top: 100%;
+        left: 0.8em;
+    }
+
 </style>
 
 <div id="app" v-cloak v-bind:class="{ playlist_fixed: playlist_fixed, filtered: filtered }">
@@ -286,6 +319,9 @@
         現在 {{ sound_list.length }} 個のボイスが登録されてるよ！ ボタン右クリック or <a href="https://github.com/yumemi-btn/v1/archive/master.zip" target="_blank">ZIPで一括ダウンロード</a>も出来るよ！ <small>(<a href="https://github.com/yumemi-btn/v1/blob/master/README.md" target="_blank">利用規約</a>を読んでね)</small> / Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a>
     </div>
     <div class="nav">
+        <div class="playlist_loaded" v-if="playlist_loaded">
+            <span class="popup">プレイリストを読み込みました</span>
+        </div>
         <button v-on:click="playSoundList(playlist)">再生</button>
         <button v-on:click="playSoundListRandom(playlist)">ランダム再生</button>
         <button v-on:click="clearPlaylist">全て削除</button>
@@ -368,6 +404,7 @@
             episodes: episodes,
             playlist: [],
             playlist_fixed: false,
+            playlist_loaded: false,
             search: '',
             category: '',
         },
@@ -418,6 +455,10 @@
         },
         mounted: function () {
             this.loadPlaylist()
+
+            if (this.playlist.length > 0) {
+                this.playlist_loaded = true
+            }
         },
         methods: {
             playSound: async function (sound) {
