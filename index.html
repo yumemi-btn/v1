@@ -135,7 +135,7 @@
     }
 
     .playlist {
-        margin: 0.6em 0;
+        margin: 0.3em 0 0.6em;
         padding: 0.3em 0;
         border: 2px dotted #27BBC8;
         border-width: 2px 0;
@@ -159,17 +159,6 @@
         border-bottom: 3px solid #27BBC8;
     }
 
-    @media screen and (max-width: 480px) {
-        .playlist {
-            height: 12em;
-            padding-right: 3em;
-        }
-
-        .playlist_fixed .playlist_content {
-            padding-right: 3em;
-        }
-    }
-
     .playlist button.sound-btn::before {
         counter-increment: playlist;
         content: counter(playlist)". ";
@@ -185,6 +174,10 @@
 
     .nav button {
         margin-right: 0.3em;
+    }
+
+    .nav {
+        line-height: 2em
     }
 
     .episode {
@@ -283,7 +276,7 @@
     }
 
     .playlist_loaded {
-        margin-bottom: 1.1em;
+        margin-bottom: 0.5em;
     }
 
     .playlist_loaded .popup {
@@ -310,13 +303,29 @@
         left: 0.8em;
     }
 
+
+    @media screen and (max-width: 480px) {
+        .playlist {
+            height: 12em;
+            padding-right: 3em;
+        }
+
+        .playlist_fixed .playlist_content {
+            padding-right: 3em;
+        }
+
+        body {
+            font-size: 0.8em;
+        }
+    }
+
 </style>
 
 <div id="app" v-cloak v-bind:class="{ playlist_fixed: playlist_fixed, filtered: filtered }">
     <h1>ユメミボタン v1.1 <small>-非公式-</small></h1>
     <div class="description">
         台湾でねこちゃんに憧れる罵倒ロリママ<a href="https://kumonoueyumemi.jimdofree.com/" target="_blank">くもの上ユメミ</a> <small>(<a href="https://www.youtube.com/channel/UCRUFY2ZCyVOvC-1rJIVZlKg" target="_blank">Youtube</a> <a href="https://twitter.com/Kumonoue_Yumemi" target="_blank">Twitter</a>)</small> ちゃんの非公式ボタンです。<br>
-        現在 {{ sound_list.length }} 個のボイスが登録されてるよ！ ボタン右クリック or <a href="https://github.com/yumemi-btn/v1/archive/master.zip" target="_blank">ZIPで一括ダウンロード</a>も出来るよ！ <small>(<a href="https://github.com/yumemi-btn/v1/blob/master/README.md" target="_blank">利用規約</a>を読んでね)</small> / Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a>
+        現在 {{ sound_list.length }} 個のボイスが登録されてるよ！ボタン右クリック(or <a href="https://github.com/yumemi-btn/v1/archive/master.zip" target="_blank">ZIPで一括</a>)ダウンロードも出来るよ！ <small>(<a href="https://github.com/yumemi-btn/v1/blob/master/README.md" target="_blank">利用規約</a>を読んでね)</small>
     </div>
     <div class="nav">
         <div class="playlist_loaded" v-if="playlist_loaded">
@@ -325,9 +334,9 @@
         <button v-on:click="playSoundList(playlist)">再生</button>
         <button v-on:click="playSoundListRandom(playlist)">ランダム再生</button>
         <button v-on:click="clearPlaylist">全て削除</button>
-        <button v-on:click="postTweet('ユメミボタン,くもユメ')">プレイリストをTwitterに投稿</button>
-        <button v-on:click="postTweet('ユメミボタンR')"><small>R指定投稿</small></button>
-        ※ プレイリストはURLに保存されます。
+        <button v-on:click="postTweet('ユメミボタン,くもユメ')">#ユメミボタン に投稿</button>
+        <button v-on:click="postTweet('ユメミボタンR')">#ユメミボタンR に投稿</button>
+        <small>※ プレイリストはURLに保存されます。</small>
     </div>
     <div id="playlist" class="playlist">
         <div class="playlist_content">
@@ -368,9 +377,11 @@
             </div>
         </article>
     </div>
-    <div style="margin-top: 3em;">
-        <button v-on:click="playSoundListRandom(sound_list)">全てをランダム再生</button>
-        <button v-on:click="playSoundListRandom(sound_list_filtered)">今見えているもの全てをランダム再生</button>
+    <div>
+        <p>
+            <button v-on:click="playSoundListRandom(sound_list)">全てをランダム再生</button>
+            <button v-on:click="playSoundListRandom(sound_list_filtered)">今見えているもの全てをランダム再生</button>
+        </p>
     </div>
     <div class="gotoTop" v-on:click="scrollTo(0, 0)">goto top</div>
 
@@ -379,6 +390,10 @@
         <li class="menuitem" @click="downloadSound(sound)">ダウンロード</li>
     </context-menu>
     <a download id="downloadLink" style="display:none;"></a>
+
+    <footer>
+        <p>Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a></p>
+    </footer>
 </div>
 
 <script src="./sounds.js"></script>
