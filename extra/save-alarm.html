@@ -178,14 +178,15 @@
         },
         watch: {
             interval: function () {
-                this.notify("間隔が変更されたので、タイマーをリセットしました！")
                 this.startTimer()
+                this.notify("間隔が変更されたので、タイマーをリセットしました！")
             }
         },
         mounted: function () {
             this.timer = new Worker('./save-alarm-worker.js')
             this.timer.onmessage = this.playSound
             this.startTimer()
+            this.notify("タイマーをスタートしました！")
         },
         methods: {
             playSound: function () {
