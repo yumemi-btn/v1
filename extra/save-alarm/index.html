@@ -1,0 +1,198 @@
+<meta charset="utf-8">
+<title>くもの上ユメミアラーム</title>
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="くもの上ユメミアラーム">
+<meta name="twitter:image" content="https://yumemi-btn.github.io/v1/assets/card.png">
+
+<link rel="icon" href="https://yumemi-btn.github.io/v1/assets/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="https://yumemi-btn.github.io/v1/assets/apple-touch-icon.png">
+<script src="//cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.min.js" integrity="sha256-/Q4ZPy6sMbk627wHxuaWSIXS1y7D2KnMhsm/+od7ptE=" crossorigin="anonymous"></script>
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<style>
+    body {
+        font-family: "Segoe UI", Meiryo, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        color: rgb(20, 23, 26);
+        background-color: #27BBC8;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    select {
+        border: none;
+        border-bottom: 1px solid #27BBC8;
+        font-size: inherit;
+    }
+
+    #app {
+        background-color: #fff;
+        padding: 15px;
+        margin: auto;
+        position: relative;
+    }
+
+    .profile {
+        display: flex;
+        font-size: 15px;
+    }
+
+    .profile>.icon {
+        margin: 0 5px;
+    }
+
+    .profile>.icon img {
+        border-radius: 100%;
+        height: 49px;
+        width: 49px;
+    }
+
+    .profile>.name {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 0 5px;
+        line-height: 1.2em;
+    }
+
+    .profile>.name>.display_name {
+        font-weight: bold;
+    }
+
+    .profile>.name>.user_name {
+        color: rgb(101, 119, 134);
+    }
+
+    .content {
+        margin: 10px 0;
+        font-size: 23px;
+    }
+
+    .footer>.date {
+        color: rgb(101, 119, 134);
+        font-size: 15px;
+    }
+
+    .notice {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -4em;
+        line-height: 1em;
+        background-color: #fff;
+        padding: 1em;
+        color: rgb(101, 119, 134);
+        opacity: 0;
+        transition: .3s opacity;
+    }
+
+    .notice.display {
+        opacity: 1;
+    }
+
+</style>
+
+<div id="app">
+    <div class="profile">
+        <div class="icon">
+            <a href="https://twitter.com/Kumonoue_Yumemi/" target="_blank"><img src="./twitter_icon.jpg"></a>
+        </div>
+        <div class="name">
+            <div class="display_name"><a href="https://twitter.com/Kumonoue_Yumemi/" target="_blank">くもの上ユメミ💭</a></div>
+            <div class="user_name"><a href="https://twitter.com/Kumonoue_Yumemi/" target="_blank">@Kumonoue_Yumemi</a></div>
+        </div>
+    </div>
+    <div class="content">
+        <select name="interval" v-model="interval" v-bind:style="`width: ${interval.name?.length + 0.5}em`">
+            <option v-for="interval in intervals" v-bind:value="interval">{{ interval.name }}</option>
+        </select>
+        置きに｢
+        <select name="sound" v-model="sound" v-bind:style="`width: ${sound.name?.length + 1}em`">
+            <option v-for="sound in sounds" v-bind:value="sound">{{ sound.name }}</option>
+        </select>
+        ｣と聞いてくれるくもの上ユメミアラーム
+    </div>
+    <div class="footer">
+        <div class="date"><a href="https://twitter.com/Kumonoue_Yumemi/status/1262793723559067648" target="_blank">午前2:14 · 2020年5月20日</a></div>
+    </div>
+
+    <div class="notice" v-bind:class="{ display: this.notice.display }">{{ notice.message }}</div>
+</div>
+
+<script>
+    const app = new Vue({
+        el: '#app',
+        data: {
+            interval: { name: '30分', value: 30 * 60 * 1000 },
+            sound: { name: 'いー感じ？', filepath: '/v1/sounds/200514/72-いー感じ？.m4a' },
+            intervals: [
+                { name: '1時間', value: 1 * 60 * 60 * 1000 },
+                { name: '30分', value: 30 * 60 * 1000 },
+                { name: '5分', value: 5 * 60 * 1000 },
+                { name: '1分', value: 1 * 60 * 1000 },
+                { name: '30秒', value: 30 * 1000 },
+                { name: '5秒', value: 5 * 1000 },
+                { name: '1秒', value: 1 * 1000 },
+                { name: '0.5秒', value: 0.5 * 1000 },
+                { name: '0.25秒', value: 0.25 * 1000 },
+                { name: '0.1秒', value: 0.1 * 1000 },
+            ],
+            sounds: [
+                { name: 'いー感じ？', filepath: '/v1/sounds/200514/72-いー感じ？.m4a' },
+                { name: 'え どうどうどうどう いい感じ？', filepath: '/v1/sounds/200423/10-え%20どうどうどうどう%20いい感じ？.m4a' },
+                { name: 'ユメミも負けないが？', filepath: '/v1/sounds/200429/12-ユメミも負けないが？.m4a' },
+                { name: '上手に出来ましたか？', filepath: '/v1/sounds/200429/96-上手に出来ましたか？.m4a' },
+                { name: '起きてる？', filepath: '/v1/sounds/200423/180-起きてる？.m4a' },
+                { name: 'えまだ起きてるー？', filepath: '/v1/sounds/200423/182-えまだ起きてるー？.m4a' },
+                { name: '可愛かった～ぁ？', filepath: '/v1/sounds/200505/06-可愛かった～ぁ？.m4a' },
+                { name: '聞こえてますかー？', filepath: '/v1/sounds/200514/247-聞こえてますかー？.m4a' },
+                { name: 'それはバカなのでは？', filepath: '/v1/sounds/200423/383-それはバカなのでは？.m4a' },
+                { name: 'もう一回出来る？', filepath: '/v1/sounds/200429/72-もう一回出来る？.m4a' },
+                { name: 'お前頭くるっとんか？', filepath: '/v1/sounds/200429/54-お前頭くるっとんか？.m4a' },
+                { name: 'ざこですもんね？', filepath: '/v1/sounds/200429/87-ざこですもんね？.m4a' },
+                { name: '童貞さん？', filepath: '/v1/sounds/200505/31-童貞さん？(ドスの利いた声).m4a' },
+            ],
+            timer: null,
+            notice: {
+                message: '',
+                display: false,
+                timer: null,
+            }
+        },
+        watch: {
+            interval: function () {
+                this.notify("間隔が変更されたので、タイマーをリセットしました！")
+                this.startTimer()
+            }
+        },
+        mounted: function () {
+            this.startTimer()
+        },
+        methods: {
+            playSound: function () {
+                (new Howl({ src: this.sound.filepath })).play()
+            },
+            startTimer: function () {
+                if (!this.interval) { return }
+                clearTimeout(this.timer)
+                this.timer = setInterval(this.playSound, this.interval.value)
+            },
+            notify: function (message) {
+                clearTimeout(this.notice.timer)
+                this.notice.message = message
+                this.notice.display = true
+                this.notice.timer = setTimeout(() => { this.notice.display = false }, 5000)
+            }
+        }
+    })
+</script>
