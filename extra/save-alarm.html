@@ -100,6 +100,11 @@
         opacity: 1;
     }
 
+    footer {
+        color: #fff;
+        text-align: center;
+    }
+
 </style>
 
 <div id="app">
@@ -128,6 +133,8 @@
 
     <div class="notice" v-bind:class="{ display: this.notice.display }">{{ notice.message }}</div>
 </div>
+
+<footer>推奨ブラウザ: Google Chrome / Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a></footer>
 
 <script>
     const app = new Vue({
@@ -162,7 +169,7 @@
                 { name: 'ざこですもんね？', filepath: '/v1/sounds/200429/87-ざこですもんね？.m4a' },
                 { name: '童貞さん？', filepath: '/v1/sounds/200505/31-童貞さん？(ドスの利いた声).m4a' },
             ],
-            timer: null,
+            timer: '',
             notice: {
                 message: '',
                 display: false,
@@ -176,6 +183,8 @@
             }
         },
         mounted: function () {
+            this.timer = new Worker('./save-alarm-worker.js')
+            this.timer.onmessage = this.playSound
             this.startTimer()
         },
         methods: {
@@ -184,8 +193,7 @@
             },
             startTimer: function () {
                 if (!this.interval) { return }
-                clearTimeout(this.timer)
-                this.timer = setInterval(this.playSound, this.interval.value)
+                this.timer.postMessage(this.interval.value)
             },
             notify: function (message) {
                 clearTimeout(this.notice.timer)
