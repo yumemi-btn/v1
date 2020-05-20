@@ -208,6 +208,9 @@
             interval: function () {
                 this.startTimer()
                 this.notify("間隔が変更されたので、タイマーをリセットしました！")
+            },
+            sound: function () {
+                this.playSound()
             }
         },
         mounted: function () {
