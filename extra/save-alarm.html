@@ -141,7 +141,17 @@
         el: '#app',
         data: {
             interval: { name: '30分', value: 30 * 60 * 1000 },
-            sound: { name: 'いー感じ？', filepath: '/v1/sounds/200514/72-いー感じ？.m4a' },
+            sound: {
+                name: '保存した？', filepath: [
+                    '/v1/sounds/extra/save-alarm/Yumemi_save1.m4a',
+                    '/v1/sounds/extra/save-alarm/Yumemi_save2.m4a',
+                    '/v1/sounds/extra/save-alarm/Yumemi_save3.m4a',
+                    '/v1/sounds/extra/save-alarm/Yumemi_save4.m4a',
+                    '/v1/sounds/extra/save-alarm/Yumemi_save5.m4a',
+                    '/v1/sounds/extra/save-alarm/Yumemi_save6.m4a',
+                    '/v1/sounds/extra/save-alarm/Yumemi_save7.m4a',
+                ]
+            },
             intervals: [
                 { name: '1時間', value: 1 * 60 * 60 * 1000 },
                 { name: '30分', value: 30 * 60 * 1000 },
@@ -155,8 +165,26 @@
                 { name: '0.1秒', value: 0.1 * 1000 },
             ],
             sounds: [
+                {
+                    name: '保存した？', filepath: [
+                        '/v1/sounds/extra/save-alarm/Yumemi_save1.m4a',
+                        '/v1/sounds/extra/save-alarm/Yumemi_save2.m4a',
+                        '/v1/sounds/extra/save-alarm/Yumemi_save3.m4a',
+                        '/v1/sounds/extra/save-alarm/Yumemi_save4.m4a',
+                        '/v1/sounds/extra/save-alarm/Yumemi_save5.m4a',
+                        '/v1/sounds/extra/save-alarm/Yumemi_save6.m4a',
+                        '/v1/sounds/extra/save-alarm/Yumemi_save7.m4a',
+                    ]
+                },
+                { name: 'ちゃんと保存しましたか？', filepath: '/v1/sounds/extra/save-alarm/Yumemi_save1.m4a' },
+                { name: 'ちゃんと保存したー？', filepath: '/v1/sounds/extra/save-alarm/Yumemi_save2.m4a' },
+                { name: '保存しないと駄目だよー', filepath: '/v1/sounds/extra/save-alarm/Yumemi_save3.m4a' },
+                { name: '保存してないでしょ', filepath: '/v1/sounds/extra/save-alarm/Yumemi_save4.m4a' },
+                { name: '保存したの？', filepath: '/v1/sounds/extra/save-alarm/Yumemi_save5.m4a' },
+                { name: '保存しようね！保存、保存', filepath: '/v1/sounds/extra/save-alarm/Yumemi_save6.m4a' },
+                { name: 'データ飛んじゃっても知らないからね！', filepath: '/v1/sounds/extra/save-alarm/Yumemi_save7.m4a' },
                 { name: 'いー感じ？', filepath: '/v1/sounds/200514/72-いー感じ？.m4a' },
-                { name: 'え どうどうどうどう いい感じ？', filepath: '/v1/sounds/200423/10-え%20どうどうどうどう%20いい感じ？.m4a' },
+                { name: 'えどうどうどうどう、いい感じ？', filepath: '/v1/sounds/200423/10-え%20どうどうどうどう%20いい感じ？.m4a' },
                 { name: 'ユメミも負けないが？', filepath: '/v1/sounds/200429/12-ユメミも負けないが？.m4a' },
                 { name: '上手に出来ましたか？', filepath: '/v1/sounds/200429/96-上手に出来ましたか？.m4a' },
                 { name: '起きてる？', filepath: '/v1/sounds/200423/180-起きてる？.m4a' },
@@ -190,7 +218,12 @@
         },
         methods: {
             playSound: function () {
-                (new Howl({ src: this.sound.filepath })).play()
+                let sound = this.sound.filepath
+                if (Array.isArray(sound)) {
+                    sound = sound[Math.floor(Math.random() * sound.length)]
+                }
+
+                (new Howl({ src: sound })).play()
             },
             startTimer: function () {
                 if (!this.interval) { return }
