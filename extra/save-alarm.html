@@ -16,9 +16,11 @@
     </script>
     <meta name="google-site-verification" content="lmaQiF69AsC9ti8OOHnhlaOCH7I5qOgr1EhD2QVTcb4" />
 
+    <meta name="description" content="台湾でねこちゃんに憧れる罵倒ロリママ系VTuber 「くもの上ユメミ」ちゃんが、忘れがちな「保存」を促してくれるアラームです。">
+
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="くもの上ユメミアラーム">
-    <meta name="twitter:image" content="https://yumemi-btn.github.io/v1/assets/card.png">
+    <meta name="og:title" content="くもの上ユメミアラーム">
+    <meta name="og:image" content="https://yumemi-btn.github.io/v1/assets/card.png">
 
     <link rel="icon" href="https://yumemi-btn.github.io/v1/assets/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="https://yumemi-btn.github.io/v1/assets/apple-touch-icon.png">
@@ -33,10 +35,6 @@
         font-family: "Segoe UI", Meiryo, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         color: rgb(20, 23, 26);
         background-color: #27BBC8;
-        display: flex;
-        flex-direction: column;
-        flex-wrap: wrap;
-        justify-content: center;
     }
 
     a {
@@ -48,6 +46,18 @@
         border: none;
         border-bottom: 1px solid #27BBC8;
         font-size: inherit;
+    }
+
+    #app_wrapper {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        position: absolute;
     }
 
     #app {
@@ -119,38 +129,44 @@
     footer {
         color: #fff;
         text-align: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
     }
 
 </style>
 
-<div id="app">
-    <div class="profile">
-        <div class="icon">
-            <a href="https://twitter.com/Kumonoue_Yumemi/" target="_blank"><img src="../assets/twitter_icon.jpg"></a>
+<div id="app_wrapper">
+    <div id="app">
+        <div class="profile">
+            <div class="icon">
+                <a href="https://twitter.com/Kumonoue_Yumemi/" target="_blank"><img src="../assets/twitter_icon.jpg"></a>
+            </div>
+            <div class="name">
+                <div class="display_name"><a href="https://twitter.com/Kumonoue_Yumemi/" target="_blank">くもの上ユメミ💭</a></div>
+                <div class="user_name"><a href="https://twitter.com/Kumonoue_Yumemi/" target="_blank">@Kumonoue_Yumemi</a></div>
+            </div>
         </div>
-        <div class="name">
-            <div class="display_name"><a href="https://twitter.com/Kumonoue_Yumemi/" target="_blank">くもの上ユメミ💭</a></div>
-            <div class="user_name"><a href="https://twitter.com/Kumonoue_Yumemi/" target="_blank">@Kumonoue_Yumemi</a></div>
+        <div class="content">
+            <select name="interval" v-model="interval" v-bind:style="`width: ${interval.name?.length + 0.5}em`">
+                <option v-for="interval in intervals" v-bind:value="interval">{{ interval.name }}</option>
+            </select>
+            置きに｢
+            <select name="sound" v-model="sound" v-bind:style="`width: ${sound.name?.length + 1}em`">
+                <option v-for="sound in sounds" v-bind:value="sound">{{ sound.name }}</option>
+            </select>
+            ｣と聞いてくれるくもの上ユメミアラーム
         </div>
-    </div>
-    <div class="content">
-        <select name="interval" v-model="interval" v-bind:style="`width: ${interval.name?.length + 0.5}em`">
-            <option v-for="interval in intervals" v-bind:value="interval">{{ interval.name }}</option>
-        </select>
-        置きに｢
-        <select name="sound" v-model="sound" v-bind:style="`width: ${sound.name?.length + 1}em`">
-            <option v-for="sound in sounds" v-bind:value="sound">{{ sound.name }}</option>
-        </select>
-        ｣と聞いてくれるくもの上ユメミアラーム
-    </div>
-    <div class="footer">
-        <div class="date"><a href="https://twitter.com/Kumonoue_Yumemi/status/1262793723559067648" target="_blank">午前2:14 · 2020年5月20日</a></div>
+        <div class="footer">
+            <div class="date"><a href="https://twitter.com/Kumonoue_Yumemi/status/1262793723559067648" target="_blank">午前2:14 · 2020年5月20日</a></div>
+        </div>
+
+        <div class="notice" v-bind:class="{ display: this.notice.display }">{{ notice.message }}</div>
     </div>
 
-    <div class="notice" v-bind:class="{ display: this.notice.display }">{{ notice.message }}</div>
+    <footer>推奨ブラウザ: Google Chrome / Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a></footer>
 </div>
-
-<footer>推奨ブラウザ: Google Chrome / Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a></footer>
 
 <script>
     const app = new Vue({
@@ -232,8 +248,11 @@
         mounted: function () {
             this.timer = new Worker('./save-alarm-worker.js')
             this.timer.onmessage = this.playSound
-            this.startTimer()
-            this.notify("タイマーをスタートしました！")
+
+            setTimeout(() => {
+                this.startTimer()
+                this.notify("タイマーをスタートしました！")
+            }, 1000)
         },
         methods: {
             playSound: function () {
