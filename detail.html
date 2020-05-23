@@ -16,9 +16,11 @@
 
     <meta name="description" content="台湾でねこちゃんに憧れる罵倒ロリママ系VTuber「くもの上ユメミ」ちゃんの非公式ボタンサイトです。かわいいボイスはもちろん、充実の罵倒ボイスがお楽しみいただけます。ざーこざこざこ！雑魚！カウントダウンもあるよ！">
 
+    <!--
     <meta name="twitter:card" content="summary">
     <meta name="og:title" content="ユメミボタン 音声詳細ページ">
     <meta name="og:image" content="https://yumemi-btn.github.io/v1/assets/card.png">
+    -->
 
     <link rel="icon" href="https://yumemi-btn.github.io/v1/assets/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="https://yumemi-btn.github.io/v1/assets/apple-touch-icon.png">
@@ -205,7 +207,10 @@
         </div>
         <div class="sound-info">
             <h3>Category</h3> {{ sound.category }}
-            <h3>File</h3> <a v-bind:href="sound.filepath" target="_blank">{{ sound.filepath }}</a> <a download v-bind:href="sound.filepath">[Download]</a>
+            <h3>File</h3> <a v-bind:href="sound.filepath" target="_blank">{{ sound.filepath }}</a>
+            <span class="nowrap">
+                <h3>Other</h3> <a download v-bind:href="sound.filepath">ダウンロード</a> / <a v-bind:href="`https://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(`「${sound.name}」`)}`" target=" _blank">Twitterでつぶやく
+            </span></a>
         </div>
     </div>
 
@@ -220,7 +225,7 @@
             </div>
             <div class="episode-thumbnail">
                 <a v-bind:href="`https://www.youtube.com/watch?v=${episode.youtube}`" target="_blank">
-                    <img v-bind:src="`https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg`" v-bind:srcset="`https://img.youtube.com/vi/${episode.youtube}/mqdefault.jpg 1x, https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg 2x`" loading="lazy">
+                    <img v-bind:src="`https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg`" v-bind:srcset="`https://img.youtube.com/vi/${episode.youtube}/mqdefault.jpg 1x, https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg 2x`">
                 </a>
             </div>
         </div>
