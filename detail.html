@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ユメミボタン 音声詳細ページ</title>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!--
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165266281-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-165266281-1');
+    </script>
+    <meta name="google-site-verification" content="lmaQiF69AsC9ti8OOHnhlaOCH7I5qOgr1EhD2QVTcb4" />
+
+    <meta name="description" content="台湾でねこちゃんに憧れる罵倒ロリママ系VTuber「くもの上ユメミ」ちゃんの非公式ボタンサイトです。かわいいボイスはもちろん、充実の罵倒ボイスがお楽しみいただけます。ざーこざこざこ！雑魚！カウントダウンもあるよ！">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="og:title" content="ユメミボタン">
+    <meta name="og:image" content="https://yumemi-btn.github.io/v1/assets/card.png">
+
+    <link rel="icon" href="https://yumemi-btn.github.io/v1/assets/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://yumemi-btn.github.io/v1/assets/apple-touch-icon.png">
+-->
+    <script src="//cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.min.js" integrity="sha256-/Q4ZPy6sMbk627wHxuaWSIXS1y7D2KnMhsm/+od7ptE=" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+
+<style>
+    body {
+        color: #27bbc8;
+        background-color: #27bbc8;
+        font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+    }
+
+    a {
+        color: inherit;
+    }
+
+    h1,
+    h3 {
+        margin: 0;
+    }
+
+    h1 a {
+        text-decoration: none;
+    }
+
+    span.nowrap {
+        white-space: nowrap;
+    }
+
+    hr {
+        border: none;
+        border-top: 2px solid #27bbc8;
+        margin: 1em 0;
+    }
+
+    #app {
+        background-color: #fff;
+        padding: 1em;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateY(-50%) translateX(-50%);
+        min-width: 75%;
+        max-height: 90%;
+        overflow-y: auto;
+    }
+
+    h2.sound-name {
+        padding-left: 3.6rem;
+    }
+
+    .sound-header {
+        position: relative;
+    }
+
+    .play-btn {
+        position: absolute;
+        top: 50%;
+        bottom: 50%;
+        width: 3.6em;
+        height: 3.6em;
+        border: 0.1em solid #27bbc8;
+        border-radius: 100%;
+        background-color: #fff;
+        margin-top: -1.8em;
+    }
+
+    .play-btn::before {
+        content: "";
+        position: absolute;
+        top: 0.8em;
+        left: 1.2em;
+        border: 1em solid transparent;
+        border-left: 1.5em solid #27bbc8;
+    }
+
+    .play-btn:active {
+        background-color: #27bbc8;
+    }
+
+    .play-btn:active::before {
+        border-left-color: #fff;
+    }
+
+    .play-btn:focus {
+        outline: 0;
+    }
+
+    .sound-info h3 {
+        display: inline-block;
+        background-color: #27bbc8;
+        color: #fff;
+        padding: 0.1em 0.3em;
+        border-radius: 3px;
+        font-size: inherit;
+        font-weight: normal;
+    }
+
+    .episode-info {
+        float: left;
+    }
+
+    .episode-thumbnail {
+        float: right;
+    }
+
+    .episode-thumbnail img {
+        width: 320px;
+        height: 180px;
+    }
+
+    footer {
+        color: #fff;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: -1;
+    }
+
+    [v-cloak] {
+        display: none;
+    }
+
+    @media screen and (max-width: 480px) {
+        body {
+            font-size: 0.9em;
+        }
+    }
+
+</style>
+
+
+<div id="app" v-cloak>
+    <h1><a href="./">ユメミボタン</a> ≫ <span class="nowrap">音声詳細ページ</span></h1>
+    <div class="sound">
+        <div class="sound-header">
+            <button class="play-btn" v-on:click="playSound(sound)" title="再生する"></button>
+            <h2 class="sound-name">「{{ sound.name }}」</h2>
+        </div>
+        <div class="sound-info">
+            <h3>Category</h3> {{ sound.category }}
+            <h3>File</h3> <a v-bind:href="sound.filepath" target="_blank">{{ sound.filepath }}</a> <a download v-bind:href="sound.filepath">[Download]</a>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="episode">
+        <div v-if="episode.youtube">
+            <div class="episode-info">
+                <h3>元配信: {{ episode.title }}</h3>
+                <div>配信日: {{ episode.date }}</div>
+                <a v-bind:href="`https://www.youtube.com/watch?v=${episode.youtube}`" target="_blank"> {{ `https://www.youtube.com/watch?v=${episode.youtube}` }}</a>
+            </div>
+            <div class="episode-thumbnail">
+                <a v-bind:href="`https://www.youtube.com/watch?v=${episode.youtube}`" target="_blank">
+                    <img v-bind:src="`https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg`" v-bind:srcset="`https://img.youtube.com/vi/${episode.youtube}/mqdefault.jpg 1x, https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg 2x`" loading="lazy">
+                </a>
+            </div>
+        </div>
+        <div v-else>
+            <h3>{{ episode.title }}</h3>
+        </div>
+    </div>
+</div>
+<footer>
+    <span class="nowrap">Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a></span> /
+    <span class="nowrap">Extra: <a href="./extra/save-alarm.html">くもの上ユメミアラーム</a></span>
+</footer>
+
+<script src="./sounds.js"></script>
+
+<script>
+    const app = new Vue({
+        el: '#app',
+        data: {
+            episodes: episodes,
+            sound: null,
+            episode: null
+        },
+        computed: {
+        },
+        watch: {
+        },
+        mounted: function () {
+            let sound_id = (location.search.match(/[\?&]sound=(.+)(%|$)/) || [, false])[1]
+
+            if (!sound_id) {
+                alert("エラー: 音声IDが指定されていません。ユメミボタンに戻ります。")
+                this.backToYumemiBtn()
+            }
+
+            this.episodes.find(episode => {
+                let sound = episode.sounds.find(sound => sound.id == sound_id)
+
+                if (sound) {
+                    this.sound = sound
+                    this.episode = episode
+                    return true
+                } else {
+                    return false
+                }
+            })
+
+            if (!this.sound) {
+                alert("エラー: 音声が見つかりませんでした。ユメミボタンに戻ります。")
+                this.backToYumemiBtn()
+            }
+        },
+        methods: {
+            backToYumemiBtn: function () {
+                location.href = './'
+            },
+            playSound: async function (sound) {
+                sound.isPlaying = true
+                return new Promise(resolve => {
+                    (new Howl({
+                        src: sound.filepath,
+                        onend: () => {
+                            sound.isPlaying = false
+                            resolve()
+                        }
+                    })).play()
+                })
+            }
+        }
+    })
+</script>
