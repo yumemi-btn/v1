@@ -208,7 +208,8 @@
             <h3>File</h3> <a v-bind:href="sound.filepath" target="_blank">{{ sound.filepath }}</a>
             <span class="nowrap">
                 <h3>Other</h3> <a download v-bind:href="sound.filepath">ダウンロード</a> / <a v-bind:href="`https://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(`「${sound.name}」`)}`" target=" _blank">Twitterでつぶやく
-            </span></a>
+                </a>
+            </span>
         </div>
     </div>
 
