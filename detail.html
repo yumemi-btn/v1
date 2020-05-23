@@ -32,6 +32,7 @@
         color: #27bbc8;
         background-color: #27bbc8;
         font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+        margin: 0;
     }
 
     a {
@@ -73,7 +74,19 @@
 
 
     h2.sound-name {
-        padding-left: 3.6rem;
+        padding-left: 6rem;
+        min-height: 6rem;
+        display: flex;
+        align-items: center;
+        margin: 1rem 0;
+    }
+
+    h2.sound-name.short {
+        font-size: 3em;
+    }
+
+    h2.sound-name.middle {
+        font-size: 2em;
     }
 
     .sound-header {
@@ -84,21 +97,22 @@
         position: absolute;
         top: 50%;
         bottom: 50%;
-        width: 3.6em;
-        height: 3.6em;
+        width: 6em;
+        height: 6em;
         border: 0.1em solid #27bbc8;
         border-radius: 100%;
         background-color: #fff;
-        margin-top: -1.8em;
+        margin-top: -3em;
+        margin-left: 0.5rem;
     }
 
     .play-btn::before {
         content: "";
         position: absolute;
-        top: 0.8em;
-        left: 1.2em;
-        border: 1em solid transparent;
-        border-left: 1.5em solid #27bbc8;
+        top: 1.1em;
+        left: 1.8em;
+        border: 1.8em solid transparent;
+        border-left: 3em solid #27bbc8;
     }
 
     .play-btn:active {
@@ -123,6 +137,17 @@
         font-weight: normal;
     }
 
+    .episode-info h3 {
+        display: inline-block;
+        background-color: #27bbc8;
+        color: #fff;
+        padding: 0.1em 0.3em;
+        border-radius: 3px;
+        font-weight: normal;
+        margin: 0.1em 0;
+        font-size: 0.9em;
+    }
+
     .episode-info {
         float: left;
     }
@@ -144,6 +169,7 @@
         background-color: #fff;
         padding: 1em;
         margin-top: 1.4em;
+        margin-bottom: 1.4em;
     }
 
     #description h2 {
@@ -171,6 +197,12 @@
 
         h1 {
             font-size: 1.4em;
+        }
+
+
+        h2.sound-name.short,
+        h2.sound-name.middle {
+            font-size: 1.5em;
         }
 
         #app_wrapper {
@@ -210,7 +242,7 @@
         <div class="sound">
             <div class="sound-header">
                 <button class="play-btn" v-on:click="playSound(sound)" title="再生する"></button>
-                <h2 class="sound-name">「{{ sound.name }}」</h2>
+                <h2 class="sound-name" v-bind:class="{ short: sound.name.length < 10, middle: (sound.name.length < 20 && sound.name.length >= 10) }">「{{ sound.name }}」</h2>
             </div>
             <div class="sound-info">
                 <h3>Category</h3> {{ sound.category }}
@@ -227,8 +259,12 @@
         <div class="episode">
             <div v-if="episode.youtube">
                 <div class="episode-info">
-                    <h3>元配信: {{ episode.title }}</h3>
-                    <div>配信日: {{ episode.date }}</div>
+                    <div>
+                        <h3>配信タイトル</h3> <strong>{{ episode.title }}</strong>
+                    </div>
+                    <div>
+                        <h3>配信日</h3> {{ episode.date }}
+                    </div>
                     <a v-bind:href="`https://www.youtube.com/watch?v=${episode.youtube}`" target="_blank"> {{ `https://www.youtube.com/watch?v=${episode.youtube}` }}</a>
                 </div>
                 <div class="episode-thumbnail">
@@ -238,7 +274,11 @@
                 </div>
             </div>
             <div v-else>
-                <h3>{{ episode.title }}</h3>
+                <div class="episode-info">
+                    <div>
+                        <h3>素材タイトル</h3> <strong>{{ episode.title }}</strong>
+                    </div>
+                </div>
             </div>
         </div>
 
