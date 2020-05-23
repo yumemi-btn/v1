@@ -133,6 +133,13 @@
         height: 180px;
     }
 
+    .back {
+        position: absolute;
+        left: 1em;
+        bottom: 0.6em;
+        z-index: -1;
+    }
+
     footer {
         color: #fff;
         text-align: center;
@@ -151,13 +158,46 @@
         body {
             font-size: 0.9em;
         }
+
+        h1 {
+            font-size: 1.4em;
+        }
+
+        #app {
+            padding: 1em;
+            position: relative;
+            transform: none;
+            left: 0;
+        }
+
+        .episode-info {
+            float: none;
+        }
+
+        .episode-thumbnail {
+            float: none;
+            margin: 1em 0.3em;
+        }
+
+        .episode-thumbnail img {
+            width: 100%;
+            height: auto;
+        }
+
+        .back,
+        footer {
+            position: relative;
+            z-index: 1;
+            bottom: 0;
+            left: 0;
+        }
     }
 
 </style>
 
 
 <div id="app" v-cloak>
-    <h1><a href="./">ユメミボタン</a> ≫ <span class="nowrap">音声詳細ページ</span></h1>
+    <h1><a href="./">ユメミボタン</a> ≫ 音声詳細ページ</h1>
     <div class="sound">
         <div class="sound-header">
             <button class="play-btn" v-on:click="playSound(sound)" title="再生する"></button>
@@ -188,6 +228,8 @@
             <h3>{{ episode.title }}</h3>
         </div>
     </div>
+
+    <div class="back"><a href="./">«「ユメミボタン」に戻る</a></div>
 </div>
 <footer>
     <span class="nowrap">Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a></span> /
