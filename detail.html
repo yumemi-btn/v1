@@ -14,7 +14,7 @@
     </script>
     <meta name="google-site-verification" content="lmaQiF69AsC9ti8OOHnhlaOCH7I5qOgr1EhD2QVTcb4" />
 
-    <meta name="description" content="台湾でねこちゃんに憧れる罵倒ロリママ系VTuber「くもの上ユメミ」ちゃんの非公式ボタンサイトです。かわいいボイスはもちろん、充実の罵倒ボイスがお楽しみいただけます。ざーこざこざこ！へんたい！カウントダウン雑魚もあるよ！">
+    <meta name="description" content="台湾でねこちゃんに憧れる罵倒ロリママ系VTuber「くもの上ユメミ」ちゃんの非公式音声素材です。">
 
     <meta name="twitter:card" content="summary">
     <meta name="og:title" content="ユメミボタン 音声詳細ページ">
@@ -57,17 +57,20 @@
         margin: 1em 0;
     }
 
-    #app {
-        background-color: #fff;
-        padding: 1em;
+    #app_wrapper {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translateY(-50%) translateX(-50%);
-        min-width: 75%;
+        min-width: 80%;
         max-height: 90%;
-        overflow-y: auto;
     }
+
+    #app {
+        background-color: #fff;
+        padding: 1em;
+    }
+
 
     h2.sound-name {
         padding-left: 3.6rem;
@@ -137,6 +140,16 @@
         clear: both;
     }
 
+    #description {
+        background-color: #fff;
+        padding: 1em;
+        margin-top: 1.4em;
+    }
+
+    #description h2 {
+        margin: 0;
+    }
+
     footer {
         color: #fff;
         text-align: center;
@@ -160,7 +173,7 @@
             font-size: 1.4em;
         }
 
-        #app {
+        #app_wrapper {
             padding: 1em;
             position: relative;
             transform: none;
@@ -191,49 +204,57 @@
 
 </style>
 
-
-<div id="app" v-cloak>
-    <h1><a href="./">ユメミボタン</a> ≫ 音声詳細ページ</h1>
-    <div class="sound">
-        <div class="sound-header">
-            <button class="play-btn" v-on:click="playSound(sound)" title="再生する"></button>
-            <h2 class="sound-name">「{{ sound.name }}」</h2>
-        </div>
-        <div class="sound-info">
-            <h3>Category</h3> {{ sound.category }}
-            <h3>File</h3> <a v-bind:href="sound.filepath" target="_blank">{{ sound.filepath }}</a>
-            <span class="nowrap">
-                <h3>Other</h3> <a download v-bind:href="sound.filepath">ダウンロード</a> / <a v-bind:href="`https://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(`「${sound.name}」`)}`" target=" _blank">Twitterでつぶやく
-                </a>
-            </span>
-        </div>
-    </div>
-
-    <hr>
-
-    <div class="episode">
-        <div v-if="episode.youtube">
-            <div class="episode-info">
-                <h3>元配信: {{ episode.title }}</h3>
-                <div>配信日: {{ episode.date }}</div>
-                <a v-bind:href="`https://www.youtube.com/watch?v=${episode.youtube}`" target="_blank"> {{ `https://www.youtube.com/watch?v=${episode.youtube}` }}</a>
+<div id="app_wrapper">
+    <div id="app" v-cloak>
+        <h1><a href="./">ユメミボタン</a> ≫ 音声詳細ページ</h1>
+        <div class="sound">
+            <div class="sound-header">
+                <button class="play-btn" v-on:click="playSound(sound)" title="再生する"></button>
+                <h2 class="sound-name">「{{ sound.name }}」</h2>
             </div>
-            <div class="episode-thumbnail">
-                <a v-bind:href="`https://www.youtube.com/watch?v=${episode.youtube}`" target="_blank">
-                    <img v-bind:src="`https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg`" v-bind:srcset="`https://img.youtube.com/vi/${episode.youtube}/mqdefault.jpg 1x, https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg 2x`">
-                </a>
+            <div class="sound-info">
+                <h3>Category</h3> {{ sound.category }}
+                <h3>File</h3> <a v-bind:href="sound.filepath" target="_blank">{{ sound.filepath }}</a>
+                <span class="nowrap">
+                    <h3>Other</h3> <a download v-bind:href="sound.filepath">ダウンロード</a> /
+                    <a v-bind:href="`https://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(`「${sound.name}」`)}`" target="_blank">Twitterでつぶやく</a>
+                </span>
             </div>
         </div>
-        <div v-else>
-            <h3>{{ episode.title }}</h3>
+
+        <hr>
+
+        <div class="episode">
+            <div v-if="episode.youtube">
+                <div class="episode-info">
+                    <h3>元配信: {{ episode.title }}</h3>
+                    <div>配信日: {{ episode.date }}</div>
+                    <a v-bind:href="`https://www.youtube.com/watch?v=${episode.youtube}`" target="_blank"> {{ `https://www.youtube.com/watch?v=${episode.youtube}` }}</a>
+                </div>
+                <div class="episode-thumbnail">
+                    <a v-bind:href="`https://www.youtube.com/watch?v=${episode.youtube}`" target="_blank">
+                        <img v-bind:src="`https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg`" v-bind:srcset="`https://img.youtube.com/vi/${episode.youtube}/mqdefault.jpg 1x, https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg 2x`">
+                    </a>
+                </div>
+            </div>
+            <div v-else>
+                <h3>{{ episode.title }}</h3>
+            </div>
         </div>
+
+        <div class="back"><a href="./">«「ユメミボタン」に戻る</a></div>
+
+    </div>
+    <div id="description">
+        <h2>これは何？</h2>
+        台湾でねこちゃんに憧れる罵倒ロリママ <a href="https://kumonoueyumemi.jimdofree.com/" target="_blank">くもの上ユメミ</a> <small>(<a href="https://www.youtube.com/channel/UCRUFY2ZCyVOvC-1rJIVZlKg" target="_blank">Youtube</a> <a href="https://twitter.com/Kumonoue_Yumemi" target="_blank">Twitter</a>)</small> ちゃんの非公式ボタン、<a href="./">ユメミボタン</a>で使用されている音声素材です。<br>
+        音声素材を利用される方は、必ず <a href="https://kumonoueyumemi.jimdofree.com/%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84/" target="_blank">くもの上ユメミ 利用規約</a> をご確認ください。
     </div>
 
-    <div class="back"><a href="./">«「ユメミボタン」に戻る</a></div>
 </div>
+
 <footer>
-    <span class="nowrap">Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a></span> /
-    <span class="nowrap">Extra: <a href="./extra/save-alarm.html">くもの上ユメミアラーム</a></span>
+    Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a>
 </footer>
 
 <script src="./sounds.js"></script>
