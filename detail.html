@@ -40,6 +40,7 @@
     }
 
     h1,
+    h2,
     h3 {
         margin: 0;
     }
@@ -48,13 +49,13 @@
         text-decoration: none;
     }
 
-    span.nowrap {
+    .nowrap {
         white-space: nowrap;
     }
 
     hr {
         border: none;
-        border-top: 2px solid #27bbc8;
+        border-top: 1px solid #27bbc8;
         margin: 1em 0;
     }
 
@@ -74,11 +75,10 @@
 
 
     h2.sound-name {
-        padding-left: 6rem;
+        padding-left: 5.5rem;
         min-height: 6rem;
         display: flex;
         align-items: center;
-        margin: 1rem 0;
     }
 
     h2.sound-name.short {
@@ -91,53 +91,57 @@
 
     .sound-header {
         position: relative;
+        border: 2px solid #27bbc8;
+        border-radius: 0.3em;
+        margin: 1em 0;
     }
 
     .play-btn {
         position: absolute;
         top: 50%;
         bottom: 50%;
-        width: 6em;
-        height: 6em;
-        border: 0.1em solid #27bbc8;
+        width: 5em;
+        height: 4.6em;
+        border: 2px solid #27bbc8;
         border-radius: 100%;
         background-color: #fff;
-        margin-top: -3em;
-        margin-left: 0.5rem;
+        margin-top: -2.5em;
+        margin-left: 1rem;
+        cursor: pointer;
+        box-shadow: 0 0.4em #27bbc8;
     }
 
     .play-btn::before {
         content: "";
         position: absolute;
-        top: 1.1em;
-        left: 1.8em;
-        border: 1.8em solid transparent;
-        border-left: 3em solid #27bbc8;
+        top: 0.8em;
+        left: 1.5em;
+        border: 1.3em solid transparent;
+        border-left: 2.2em solid #27bbc8;
     }
 
     .play-btn:active {
-        background-color: #27bbc8;
-    }
-
-    .play-btn:active::before {
-        border-left-color: #fff;
+        transform: translateY(0.4em);
+        box-shadow: none;
     }
 
     .play-btn:focus {
         outline: 0;
     }
 
-    .sound-info h3 {
-        display: inline-block;
-        background-color: #27bbc8;
-        color: #fff;
-        padding: 0.1em 0.3em;
-        border-radius: 3px;
-        font-size: inherit;
-        font-weight: normal;
+    .sound-info span {
+        margin-right: 0.3em;
+        margin-bottom: 0.3em;
     }
 
-    .episode-info h3 {
+    .sound-info-row {
+        display: inline-block;
+        margin-bottom: 0.6em;
+        margin-right: 0.3em;
+    }
+
+    .episode-info h3,
+    .sound-info h3 {
         display: inline-block;
         background-color: #27bbc8;
         color: #fff;
@@ -146,6 +150,11 @@
         font-weight: normal;
         margin: 0.1em 0;
         font-size: 0.9em;
+        line-height: 1.2rem;
+    }
+
+    .episode-info-row {
+        margin-bottom: 0.6em;
     }
 
     .episode-info {
@@ -242,15 +251,20 @@
         <div class="sound">
             <div class="sound-header">
                 <button class="play-btn" v-on:click="playSound(sound)" title="再生する"></button>
-                <h2 class="sound-name" v-bind:class="{ short: sound.name.length < 10, middle: (sound.name.length < 20 && sound.name.length >= 10) }">「{{ sound.name }}」</h2>
+                <h2 class="sound-name" v-bind:class="{ short: sound.name?.length < 10, middle: (sound.name?.length < 20 && sound.name?.length >= 10) }">「{{ sound.name }}」</h2>
             </div>
             <div class="sound-info">
-                <h3>Category</h3> {{ sound.category }}
-                <h3>File</h3> <a v-bind:href="sound.filepath" target="_blank">{{ sound.filepath }}</a>
-                <span class="nowrap">
+                <div class="sound-info-row">
+                    <h3>Category</h3> {{ sound.category }}
+                </div>
+                <div class="sound-info-row">
+                    <h3>File</h3> <a v-bind:href="sound.filepath" target="_blank">{{ sound.filepath }}</a>
+                </div>
+                <div class="sound-info-row nowrap">
                     <h3>Other</h3> <a download v-bind:href="sound.filepath">ダウンロード</a> /
                     <a v-bind:href="`https://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(`「${sound.name}」`)}`" target="_blank">Twitterでつぶやく</a>
-                </span>
+                </div>
+
             </div>
         </div>
 
@@ -259,13 +273,15 @@
         <div class="episode">
             <div v-if="episode.youtube">
                 <div class="episode-info">
-                    <div>
+                    <div class="episode-info-row">
                         <h3>配信タイトル</h3> <strong>{{ episode.title }}</strong>
                     </div>
-                    <div>
+                    <div class="episode-info-row">
                         <h3>配信日</h3> {{ episode.date }}
                     </div>
-                    <a v-bind:href="`https://www.youtube.com/watch?v=${episode.youtube}`" target="_blank"> {{ `https://www.youtube.com/watch?v=${episode.youtube}` }}</a>
+                    <div class="episode-info-row">
+                        <a v-bind:href="`https://www.youtube.com/watch?v=${episode.youtube}`" target="_blank"> {{ `https://www.youtube.com/watch?v=${episode.youtube}` }}</a>
+                    </div>
                 </div>
                 <div class="episode-thumbnail">
                     <a v-bind:href="`https://www.youtube.com/watch?v=${episode.youtube}`" target="_blank">
@@ -304,8 +320,8 @@
         el: '#app',
         data: {
             episodes: episodes,
-            sound: null,
-            episode: null
+            sound: '',
+            episode: ''
         },
         computed: {
         },
