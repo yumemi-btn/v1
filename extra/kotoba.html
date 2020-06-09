@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<head>
+
+    <meta charset="utf-8">
+    <title>くもの上ユメミのふわふわ言葉・チクチク言葉</title>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165266281-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-165266281-1');
+    </script>
+    <meta name="google-site-verification" content="lmaQiF69AsC9ti8OOHnhlaOCH7I5qOgr1EhD2QVTcb4" />
+
+    <meta name="description" content="台湾でねこちゃんに憧れる罵倒ロリママ系VTuber「くもの上ユメミ」ちゃんによる「ふわふわ言葉」「チクチク言葉」です。">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="og:title" content="くもの上ユメミのふわふわ言葉・チクチク言葉">
+    <meta name="og:image" content="https://yumemi-btn.github.io/v1/assets/card.png">
+
+    <link rel="icon" href="https://yumemi-btn.github.io/v1/assets/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://yumemi-btn.github.io/v1/assets/apple-touch-icon.png">
+    <script src="//cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.min.js" integrity="sha256-/Q4ZPy6sMbk627wHxuaWSIXS1y7D2KnMhsm/+od7ptE=" crossorigin="anonymous"></script>
+
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+
+<style>
+    @font-face {
+        font-family: 'HuiFontP109_min';
+        src: url('./kotoba/HuiFontP109_min.woff') format('woff');
+    }
+
+    body {
+        font-family: "HuiFontP109_min";
+        background-color: #fff;
+    }
+
+    .sound {
+        display: inline-block;
+        min-width: 50%;
+        white-space: nowrap;
+    }
+
+    .sound-btn {
+        cursor: pointer;
+        white-space: nowrap;
+        font-size: 22px;
+        line-height: 1.4;
+    }
+
+    #app {
+        max-width: 1000px;
+        margin: auto;
+    }
+
+    .groups {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .group {
+        width: calc(50% - 21px);
+        margin: 10px;
+    }
+
+    @media (max-width: 700px) {
+        .group {
+            width: calc(100% - 20px);
+            margin: 10px;
+        }
+    }
+
+    h1 a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid #000;
+    }
+
+    h2 {
+        max-width: 300px;
+        height: 100px;
+        background-size: 100% 100%;
+        color: #fff;
+        text-align: center;
+        line-height: 100px;
+        font-size: 35px;
+        margin: 0 auto -50px;
+        z-index: 100;
+        position: relative;
+        white-space: nowrap;
+    }
+
+    .huwahuwa {
+        background-image: url("./kotoba/fukidashi04.png")
+    }
+
+    .chikuchiku {
+        background-image: url("./kotoba/fukidashi05.png")
+    }
+
+    .soundlist {
+        border: 3px solid #ccc;
+        border-radius: 30px;
+        padding: 50px 10px 10px;
+        height: calc(100% - 110px);
+    }
+
+    footer {
+        margin-top: 1em;
+        text-align: center;
+    }
+
+</style>
+
+
+<div id="app">
+    <h1><a href="https://twitter.com/Kumonoue_Yumemi" target="_blank">くもの上ユメミ</a>の</h1>
+    <div class="groups">
+        <div class="group">
+            <h2 class="huwahuwa">ふわふわ言葉</h2>
+            <div class="soundlist">
+                <div class="sound" v-for="sound in ふわふわ言葉">
+                    <span class="sound-btn" v-on:click="playSound(sound)">{{ sound.name }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="group">
+            <h2 class="chikuchiku">チクチク言葉</h2>
+            <div class="soundlist">
+                <div class="sound" v-for="sound in チクチク言葉">
+                    <span class="sound-btn" v-on:click="playSound(sound)">{{ sound.name }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer><a href="/v1/">ユメミボタン</a>でもっと聞く！ / Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a></footer>
+</div>
+
+<script>
+    const app = new Vue({
+        el: '#app',
+        data: {
+            'ふわふわ言葉': [
+                { name: 'ありがとう', filepath: '/v1/sounds/200604/701-ありがとう.m4a' },
+                { name: 'その調子', filepath: '/v1/sounds/200604/702-その調子.m4a' },
+                { name: 'やったねぇ', filepath: '/v1/sounds/200604/703-やったねぇ.m4a' },
+                { name: 'よろしくね', filepath: '/v1/sounds/200604/704-よろしくね.m4a' },
+                { name: '楽しいね', filepath: '/v1/sounds/200604/705-楽しいね.m4a' },
+                { name: '嬉しいなー', filepath: '/v1/sounds/200604/706-うんうん嬉しいなー.m4a' },
+                { name: 'すごいね', filepath: '/v1/sounds/200604/707-すごいね.m4a' },
+                { name: 'ファイトファイト', filepath: '/v1/sounds/200604/772-うんうんファイトファイト.m4a' },
+                { name: 'すごいすごい', filepath: ['/v1/sounds/200604/774-すごいすごい.m4a', '/v1/sounds/200423/47-すごいすごい.m4a', '/v1/sounds/200429/94-すごいすごい.m4a'] },
+                { name: 'わぁ～すごーい', filepath: '/v1/sounds/200604/776-わぁ～すごーい.m4a' },
+                { name: '頑張ったねぇ', filepath: ['/v1/sounds/200604/777-うんうんうん頑張ったねぇ.m4a', '/v1/sounds/200423/171-今日も頑張ったねー.m4a'] },
+                { name: 'あぁすごい！', filepath: '/v1/sounds/200604/250-あぁすごい！.m4a' },
+                { name: 'すごいねぇみんな', filepath: '/v1/sounds/200604/251-すごいねぇみんな.m4a' },
+                { name: '上手にできたねぇ', filepath: '/v1/sounds/200604/252-上手にできたねぇ.m4a' },
+                { name: 'えらいえらい', filepath: ['/v1/sounds/200429/91-えらいえらい.m4a', '/v1/sounds/200423/46-おーえらいえらい.m4a', '/v1/sounds/200604/249-あぁーえらいねぇー えらいえらい.m4a'] },
+                { name: 'じょうずじょうず', filepath: '/v1/sounds/200429/92-じょうずじょうず.m4a' },
+                { name: 'じょうずだねぇ', filepath: '/v1/sounds/200429/93-じょうずだねぇ.m4a' },
+                { name: '上手に出来ましたか？', filepath: '/v1/sounds/200429/96-上手に出来ましたか？.m4a' },
+                { name: 'よしよし', filepath: ['/v1/sounds/200423/44-よしよし.m4a', '/v1/sounds/200423/48-よしよし.m4a'] },
+                { name: 'えらいねぇえらいねぇ', filepath: '/v1/sounds/200423/49-えらいねぇえらいねぇ.m4a' },
+                { name: 'いつも頑張っててえらいねぇ', filepath: '/v1/sounds/200423/45-よしよしいつも頑張っててえらいねぇ.m4a' },
+                { name: 'やったねぇえらかったねぇ', filepath: '/v1/sounds/200604/773-うんうんうんうん やったねぇえらかったねぇ.m4a' },
+            ],
+            'チクチク言葉': [
+                { name: 'むかつく', filepath: '/v1/sounds/200604/728-むかつく.m4a' },
+                { name: 'うっざ', filepath: '/v1/sounds/200604/729-うっざ.m4a' },
+                { name: 'バカじゃないのぉ？', filepath: '/v1/sounds/200604/730-バカじゃないのぉ？.m4a' },
+                { name: '早くして', filepath: '/v1/sounds/200604/731-早くして.m4a' },
+                { name: '目障り', filepath: '/v1/sounds/200604/732-目障り.m4a' },
+                { name: 'アホじゃなーい？', filepath: '/v1/sounds/200604/733-アホじゃなーい？.m4a' },
+                { name: 'サイテー', filepath: ['/v1/sounds/200604/734-サイテー.m4a', '/v1/sounds/200604/747-さいてい.m4a'] },
+                { name: '意味分かんない', filepath: '/v1/sounds/200604/735-意味分かんない.m4a' },
+                { name: 'ふざけんな！', filepath: '/v1/sounds/200604/736-ふざけんな！.m4a' },
+                { name: 'きもーい', filepath: '/v1/sounds/200604/737-きもーい.m4a' },
+                { name: '何やってんの？', filepath: '/v1/sounds/200604/738-何やってんの？.m4a' },
+                { name: 'だまれ', filepath: '/v1/sounds/200604/739-だまれ.m4a' },
+                { name: '消えて？', filepath: '/v1/sounds/200604/740-消えて？.m4a' },
+                { name: '入れてあげないよ', filepath: ['/v1/sounds/200604/745-入れてあげないよ.m4a', '/v1/sounds/200604/746-入れてあげないよ (少し明るい).m4a'] },
+                { name: 'むかつく', filepath: '/v1/sounds/200604/748-むかつく (小声).m4a' },
+                { name: 'きえて', filepath: ['/v1/sounds/200604/750-きえて (少し強く).m4a', '/v1/sounds/200604/751-きえて (少し優しく).m4a'] },
+                { name: 'だまれ', filepath: '/v1/sounds/200604/752-だまれ.m4a' },
+                { name: 'うざっ', filepath: ['/v1/sounds/200604/753-うざっ (小声).m4a', '/v1/sounds/200604/771-うざ.m4a'] },
+                { name: 'どっかいって', filepath: '/v1/sounds/200604/754-どっかいって.m4a' },
+                { name: 'ムカつくんですけど', filepath: '/v1/sounds/200604/760-ムカつくんですけど.m4a' },
+                { name: 'ウザいですよぉ？', filepath: '/v1/sounds/200604/761-ウザいですよぉ？.m4a' },
+                { name: '早くして', filepath: ['/v1/sounds/200604/763-早くして.m4a', '/v1/sounds/200604/766-早くして (少し優しい).m4a', '/v1/sounds/200604/768-早くして？.m4a'] },
+                { name: '早く！', filepath: ['/v1/sounds/200604/764-早く！.m4a', '/v1/sounds/200604/765-早く！ (少し高い).m4a', '/v1/sounds/200604/767-はーやーく.m4a', '/v1/sounds/200604/770-はやくはやく (小声).m4a'] },
+            ],
+        },
+        methods: {
+            playSound: function (sound) {
+                let sound_path = sound.filepath
+                if (Array.isArray(sound_path)) {
+                    if (sound.count == null) { sound.count = 0 }
+                    sound_path = sound_path[sound.count % sound_path.length]
+                    sound.count++
+                }
+
+                (new Howl({ src: sound_path })).play()
+            }
+        }
+    })
+</script>
