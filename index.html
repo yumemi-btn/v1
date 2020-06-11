@@ -386,7 +386,7 @@
     </div>
     <div class="gotoTop" v-on:click="scrollTo(0, 0)">goto top</div>
 
-    <context-menu class="context-menu" ref="sctx" @ctx-open="(event) => {this.event = event}">
+    <context-menu class="context-menu" ref="sctx" @ctx-open="(event) => {this.sound = event}">
         <li class="menuitem" @click="openSoundDetail(sound)">詳細ページを開く</li>
         <li class="menuitem" @click="openSoundFile(sound)">ファイルを開く</li>
         <li class="menuitem" @click="downloadSound(sound)">ダウンロード</li>
