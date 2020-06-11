@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>ユメミボタン v1.3 - くもの上ユメミ非公式ボタン</title>
+    <title>ユメミボタン v1.3.1 - くもの上ユメミ非公式ボタン</title>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165266281-1"></script>
     <script>
@@ -91,9 +91,13 @@
     .add-btn,
     .delete-btn {
         border-radius: 100%;
-        padding: 0 0.3em;
+        padding: 0 0.1em;
         user-select: none;
         font-size: 1em;
+        width: 1.2em;
+        height: 1.2em;
+        line-height: 1;
+        text-align: center;
     }
 
     .sound-btn {
@@ -265,6 +269,10 @@
         visibility: visible;
     }
 
+    .ctx-menu {
+        min-width: 180px;
+    }
+
     .menuitem {
         cursor: pointer;
         padding: 0 0.6em;
@@ -304,6 +312,24 @@
         left: 0.8em;
     }
 
+    .workarea .sound-btn {
+        font-size: 0.8em;
+        max-width: 15em;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .workarea h2 {
+        margin-top: 0.3em;
+        border-left: 0.3em solid;
+        padding-left: 0.2em;
+        margin-bottom: 0.2em
+    }
+
+    .workarea h2 button {
+        font-size: 0.7em;
+    }
 
     @media screen and (max-width: 480px) {
         .playlist {
@@ -323,7 +349,7 @@
 </style>
 
 <div id="app" v-cloak v-bind:class="{ playlist_fixed: playlist_fixed, filtered: filtered }">
-    <h1>ユメミボタン v1.3 <small>-非公式-</small></h1>
+    <h1>ユメミボタン v1.3.1 <small>-非公式-</small></h1>
     <div class="description">
         台湾でねこちゃんに憧れる罵倒ロリママ系VTuber <a href="https://yumemich.com/" target="_blank">くもの上ユメミ</a> <small>(<a href="https://www.youtube.com/channel/UCRUFY2ZCyVOvC-1rJIVZlKg" target="_blank">Youtube</a> <a href="https://twitter.com/Kumonoue_Yumemi" target="_blank">Twitter</a>)</small> ちゃんの非公式ボタンです。<br>
         現在 {{ sound_list.length - 8 }} 個のボイスが登録されてるよ！ボタン右クリック(or <a href="https://github.com/yumemi-btn/v1/archive/master.zip" target="_blank">ZIPで一括</a>)ダウンロードも出来るよ！ <small>(<a href="https://github.com/yumemi-btn/v1/blob/master/README.md" target="_blank">利用規約</a>を読んでね)</small>
@@ -344,7 +370,7 @@
             <div v-if="!playlist.length">＊プレイリストは空です＊<br>(+)ボタンを押すとプレイリストに追加されます。追加後にドラッグ＆ドロップで並び替えも出来るよ！<br>プレイリストはURLに反映されるので、ブックマークに保存したり、共有したり出来ます！</div>
             <draggable :list="playlist" class="playlist_drag">
                 <div class="sound" v-for="(sound, index) in playlist">
-                    <button class="sound-btn" v-on:click="playSound(sound)" title="再生" @contextmenu.prevent="$refs.pctx.open($event, {sound, index})">{{ sound.name }}</button>
+                    <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="playlist.splice(index, 1)" title="再生" @contextmenu.prevent="$refs.pctx.open($event, {sound, index})">{{ sound.name }}</button>
                     <button class="delete-btn" v-on:click="playlist.splice(index, 1)" title="プレイリストから削除">x</button>
                 </div>
             </draggable>
@@ -360,6 +386,16 @@
             <button v-on:click="() => {this.search = ''; this.category = ''}" title="キーワード/カテゴリをクリア">✕</button>
         </div>
     </div>
+    <div id="workarea" class="workarea" v-if="workarea.length > 0">
+        <h2>ワークエリア <small> 一時保管場所です。ホイールクリックでも追加/削除出来ます！ <button v-on:click="clearWorkarea">全て削除</button></small></h2>
+        <draggable :list="workarea" class="workarea_drag">
+            <div class="sound" v-for="(sound, index) in workarea">
+                <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="workarea.splice(index, 1)" @contextmenu.prevent="$refs.wctx.open($event, {sound, index})" title="再生">{{ sound.name }}</button>
+                <button class="add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
+                <button class="delete-btn" v-on:click="workarea.splice(index, 1)" title="ワークエリアから削除">x</button>
+            </div>
+        </draggable>
+    </div>
     <div class="content">
         <article class="episode" v-for="(episode, index) in episodes" v-bind:class="{ new: episode.new }" v-if="!filtered || episode.filtered_sounds.length">
             <header>
@@ -372,8 +408,8 @@
             </header>
             <div class="episode-content">
                 <div class="sound" v-for="(sound, index) in (filtered ? episode.filtered_sounds : episode.sounds)">
-                    <button class="sound-btn" type="button" v-on:click="playSound(sound)" title="再生" @contextmenu.prevent="$refs.sctx.open($event, sound)">{{ sound.name }}</button>
-                    <button class=" add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
+                    <button class="sound-btn" type="button" @click="playSound(sound)" @mousedown.middle.prevent="workarea.push(sound)" @contextmenu.prevent="$refs.sctx.open($event, sound)" title="再生">{{ sound.name }}</button>
+                    <button class="add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
                 </div>
             </div>
         </article>
@@ -387,6 +423,13 @@
     <div class="gotoTop" v-on:click="scrollTo(0, 0)">goto top</div>
 
     <context-menu class="context-menu" ref="sctx" @ctx-open="(event) => {this.sound = event}">
+        <li class="menuitem" @click="workarea.push(sound)">ワークエリアに追加</li>
+        <li class="menuitem" @click="openSoundDetail(sound)">詳細ページを開く</li>
+        <li class="menuitem" @click="openSoundFile(sound)">ファイルを開く</li>
+        <li class="menuitem" @click="downloadSound(sound)">ダウンロード</li>
+    </context-menu>
+    <context-menu class="context-menu" ref="wctx" @ctx-open="(event) => {this.sound = event.sound; this.index = event.index}">
+        <li class="menuitem" @click="workarea.splice(index, 1)">ワークエリアから削除</li>
         <li class="menuitem" @click="openSoundDetail(sound)">詳細ページを開く</li>
         <li class="menuitem" @click="openSoundFile(sound)">ファイルを開く</li>
         <li class="menuitem" @click="downloadSound(sound)">ダウンロード</li>
@@ -394,8 +437,9 @@
     <a download id="downloadLink" style="display:none;"></a>
 
     <context-menu class="context-menu" ref="pctx" @ctx-open="(event) => {this.sound = event.sound; this.index = event.index}">
-        <li class="menuitem" @click="playSoundList(playlist.slice(index))">ここから再生</li>
+        <li class="menuitem" @click="playSoundList(playlist.slice(index))">この位置から再生</li>
         <li class="menuitem" @click="playlist.push(sound)">同じものを追加</li>
+        <li class="menuitem" @click="workarea.push(sound)">ワークエリアに追加</li>
         <hr>
         <li class="menuitem" @click="openSoundDetail(sound)">詳細ページを開く</li>
         <li class="menuitem" @click="openSoundFile(sound)">ファイルを開く</li>
@@ -434,6 +478,7 @@
             playlist: [],
             playlist_fixed: false,
             playlist_loaded: false,
+            workarea: [],
             search: '',
             category: '',
             stop: false
@@ -481,6 +526,9 @@
                     })
                 })
                 this.search = `＊カテゴリ 「${this.category}」 を表示中＊`
+            },
+            workarea: function () {
+                localStorage.setItem('workarea', JSON.stringify(this.workarea));
             }
         },
         mounted: function () {
@@ -488,6 +536,15 @@
 
             if (this.playlist.length > 0) {
                 this.playlist_loaded = true
+            }
+
+            try {
+                let workarea_save = JSON.parse(localStorage.getItem('workarea'))
+                if (workarea_save.length > 0) {
+                    this.workarea = workarea_save
+                }
+            } catch (e) {
+                console.error(e)
             }
         },
         methods: {
@@ -530,6 +587,11 @@
             clearPlaylist: function () {
                 if (confirm("プレイリストを削除します。よろしいですか？")) {
                     this.playlist.splice(0)
+                }
+            },
+            clearWorkarea: function () {
+                if (confirm("ワークエリアを削除します。よろしいですか？")) {
+                    this.workarea.splice(0)
                 }
             },
             postTweet: function (tags) {
