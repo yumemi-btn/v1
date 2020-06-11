@@ -390,7 +390,7 @@
         <h2>ワークエリア <small> 一時保管場所です。ホイールクリックでも追加/削除出来ます！ <button v-on:click="clearWorkarea">全て削除</button></small></h2>
         <draggable :list="workarea" class="workarea_drag">
             <div class="sound" v-for="(sound, index) in workarea">
-                <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="workarea.splice(index, 1)" @contextmenu.prevent="$refs.wctx.open($event, {sound, index})" title="再生">{{ sound.name }}</button>
+                <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="workarea.splice(index, 1)" @contextmenu.prevent="$refs.wctx.open($event, {sound, index})" v-bind:title="sound.name">{{ sound.name }}</button>
                 <button class="add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
                 <button class="delete-btn" v-on:click="workarea.splice(index, 1)" title="ワークエリアから削除">x</button>
             </div>
