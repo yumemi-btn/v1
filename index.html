@@ -230,12 +230,9 @@
         height: 90px;
     }
 
-    [v-cloak]>div {
-        opacity: 0.4;
-    }
-
-    [v-cloak] .playlist_loaded,
-    [v-cloak] .context-menu {
+    [v-cloak]>div,
+    [v-cloak]>footer,
+    context-menu {
         display: none;
     }
 
@@ -367,7 +364,7 @@
     </div>
     <div id="playlist" class="playlist">
         <div class="playlist_content">
-            <div v-if="!playlist.length">＊プレイリストは空です＊<br>(+)ボタンを押すとプレイリストに追加されます。追加後にドラッグ＆ドロップで並び替えも出来るよ！<br>プレイリストはURLに反映されるので、ブックマークに保存したり、共有したり出来ます！</div>
+            <div v-show="!playlist.length">＊プレイリストは空です＊<br>(+)ボタンを押すとプレイリストに追加されます。追加後にドラッグ＆ドロップで並び替えも出来るよ！<br>プレイリストはURLに反映されるので、ブックマークに保存したり、共有したり出来ます！</div>
             <draggable :list="playlist" class="playlist_drag">
                 <div class="sound" v-for="(sound, index) in playlist">
                     <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="playlist.splice(index, 1)" title="再生" @contextmenu.prevent="$refs.pctx.open($event, {sound, index})">{{ sound.name }}</button>
@@ -386,7 +383,7 @@
             <button v-on:click="() => {this.search = ''; this.category = ''}" title="キーワード/カテゴリをクリア">✕</button>
         </div>
     </div>
-    <div id="workarea" class="workarea" v-if="workarea.length > 0">
+    <div class="workarea" v-show="workarea.length > 0">
         <h2>ワークエリア <small> 一時保管場所です。ホイールクリックでも追加/削除出来ます！ <button v-on:click="clearWorkarea">全て削除</button></small></h2>
         <draggable :list="workarea" class="workarea_drag">
             <div class="sound" v-for="(sound, index) in workarea">
@@ -397,7 +394,7 @@
         </draggable>
     </div>
     <div class="content">
-        <article class="episode" v-for="(episode, index) in episodes" v-bind:class="{ new: episode.new }" v-if="!filtered || episode.filtered_sounds.length">
+        <article class="episode" v-for="(episode, index) in episodes" v-bind:class="{ new: episode.new }" v-show="!filtered || episode.filtered_sounds.length">
             <header>
                 <h2 class="episode-title"><span v-if="episode.date">{{ episode.date}} - </span>{{ episode.title }}</h2>
                 <div class="episode-thumbnail" v-if="episode.youtube">
