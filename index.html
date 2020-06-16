@@ -104,6 +104,7 @@
         overflow: hidden;
         white-space: normal;
         text-overflow: ellipsis;
+        height: 1.8em;
     }
 
     .search-form input {
@@ -357,7 +358,7 @@
         </div>
         <button v-on:click="playSoundList(playlist)">再生</button>
         <button v-on:click="playSoundListRandom(playlist)">ランダム再生</button>
-        <button v-on:click="() => { this.stop = true }">停止</button>
+        <button v-on:click="() => { this.stop = true }" title="次の音声から停止します">停止</button>
         <button v-on:click="clearPlaylist">全て削除</button>
         <button v-on:click="postTweet('ユメミボタン,くもユメ')">#ユメミボタン に投稿</button>
         <button v-on:click="postTweet('ユメミボタンR')">#ユメミボタンR に投稿</button>
@@ -367,7 +368,7 @@
             <div v-show="!playlist.length">＊プレイリストは空です＊<br>(+)ボタンを押すとプレイリストに追加されます。追加後にドラッグ＆ドロップで並び替えも出来るよ！<br>プレイリストはURLに反映されるので、ブックマークに保存したり、共有したり出来ます！</div>
             <draggable :list="playlist" class="playlist_drag">
                 <div class="sound" v-for="(sound, index) in playlist">
-                    <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="playlist.splice(index, 1)" title="再生" @contextmenu.prevent="$refs.pctx.open($event, {sound, index})">{{ sound.name }}</button>
+                    <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="playlist.splice(index, 1)" title="再生 / ホイールクリックで削除" @contextmenu.prevent="$refs.pctx.open($event, {sound, index})">{{ sound.name }}</button>
                     <button class="delete-btn" v-on:click="playlist.splice(index, 1)" title="プレイリストから削除">x</button>
                 </div>
             </draggable>
@@ -405,7 +406,7 @@
             </header>
             <div class="episode-content">
                 <div class="sound" v-for="(sound, index) in (filtered ? episode.filtered_sounds : episode.sounds)">
-                    <button class="sound-btn" type="button" @click="playSound(sound)" @mousedown.middle.prevent="workarea.push(sound)" @contextmenu.prevent="$refs.sctx.open($event, sound)" title="再生">{{ sound.name }}</button>
+                    <button class="sound-btn" type="button" @click="playSound(sound)" @mousedown.middle.prevent="workarea.push(sound)" @contextmenu.prevent="$refs.sctx.open($event, sound)" title="再生 / ホイールクリックでワークエリアに追加">{{ sound.name }}</button>
                     <button class="add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
                 </div>
             </div>
@@ -525,7 +526,7 @@
                 this.search = `＊カテゴリ 「${this.category}」 を表示中＊`
             },
             workarea: function () {
-                localStorage.setItem('workarea', JSON.stringify(this.workarea));
+                localStorage.setItem('workarea', JSON.stringify(this.workarea))
             }
         },
         mounted: function () {
