@@ -469,9 +469,9 @@
             <div class="playlist_loaded" v-if="playlist_loaded">
                 <span class="popup">プレイリストを読み込みました！再生ボタンを押してね！</span>
             </div>
-            <button v-on:click="playSoundListADV(playlist)">再生</button>
-            <button v-on:click="playSoundList(playlist)">試聴</button>
-            <button v-on:click="playSoundListRandom(playlist)">ランダム試聴</button>
+            <button v-on:click="playSoundListADV(playlist)" title="再生画面で再生する">再生</button>
+            <button v-on:click="playSoundList(playlist)" title="この場で再生する">試聴</button>
+            <button v-on:click="playSoundListRandom(playlist)" title="この場でランダム再生する">ランダム試聴</button>
             <button v-on:click="() => { this.stop = true }" title="次の音声から停止します">停止</button>
             <button v-on:click="clearPlaylist">全て削除</button>
             <button v-on:click="postTweet('ユメミボタン,くもユメ')">#ユメミボタン に投稿</button>
