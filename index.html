@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>ユメミボタン v1.3.1 - くもの上ユメミ非公式ボタン</title>
+    <title>ユメミボタン v1.4 - くもの上ユメミ非公式ボタン</title>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165266281-1"></script>
     <script>
@@ -329,6 +329,117 @@
         font-size: 0.7em;
     }
 
+
+    #advmode {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #8BDCDD;
+        background-image: url("./assets/advmode/bg01.png"), url("./assets/advmode/bg02.png");
+        animation: cloudMove 60s linear infinite;
+    }
+
+    #advmode .close-btn {
+        position: absolute;
+        top: 0.3em;
+        left: 0.3em;
+        background-color: rgba(0, 0, 0, 0.6);
+        font-size: 2em;
+        color: #fff;
+        width: 1.4em;
+        height: 1.4em;
+        text-align: center;
+        border-radius: 50%;
+        cursor: pointer;
+
+    }
+
+    #advmode .messages_outline {
+        font-size: 2.5em;
+        font-weight: bold;
+        overflow: hidden;
+        border: 3px solid #27BBC8;
+        border-radius: 10px;
+        position: absolute;
+        max-height: 150px;
+        height: 40%;
+        bottom: 0.6em;
+        left: 0.6em;
+        right: 0.6em;
+        z-index: 100;
+        padding: 10px;
+    }
+
+    #advmode .messages_background {
+        background-color: rgba(255, 255, 255, 0.7);
+        padding: 10px;
+        height: calc(100% - 20px);
+        border-radius: 6px;
+    }
+
+    #advmode .messages_wrapper {
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+    }
+
+    #advmode .messages {
+        position: absolute;
+        bottom: 0;
+        color: #27BBC8;
+        overflow: visible;
+    }
+
+    #advmode .message:not(:last-child) {
+        opacity: 0.5;
+    }
+
+    #advmode .character {
+        position: absolute;
+        bottom: 0;
+        right: 2%;
+        line-height: 0;
+        font-size: 0;
+    }
+
+    #advmode .character img {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity .5s;
+    }
+
+    .fade-enter,
+    .fade-leave-to {
+        opacity: 0;
+    }
+
+    @keyframes cloudMove {
+        0% {
+            background-position: 0 0, 0 0;
+        }
+
+        100% {
+            background-position: 3000px 0, 1500px 0;
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        #advmode .messages_outline {
+            font-size: 1.5em;
+        }
+
+        #advmode .character {
+            right: 0;
+        }
+    }
+
     @media screen and (max-width: 480px) {
         .playlist {
             height: 12em;
@@ -347,285 +458,336 @@
 </style>
 
 <div id="app" v-cloak v-bind:class="{ playlist_fixed: playlist_fixed, filtered: filtered }">
-    <h1>ユメミボタン v1.3.1 <small>-非公式-</small></h1>
-    <div class="description">
-        台湾でねこちゃんに憧れる罵倒ロリママ系VTuber <a href="https://yumemich.com/" target="_blank">くもの上ユメミ</a> <small>(<a href="https://www.youtube.com/channel/UCRUFY2ZCyVOvC-1rJIVZlKg" target="_blank">Youtube</a> <a href="https://twitter.com/Kumonoue_Yumemi" target="_blank">Twitter</a>)</small> ちゃんの非公式ボタンです。<br>
-        現在 {{ sound_list.length - 8 }} 個のボイスが登録されてるよ！ボタン右クリック(or <a href="https://github.com/yumemi-btn/v1/archive/master.zip" target="_blank">ZIPで一括</a>)ダウンロードも出来るよ！ <small>(<a href="https://github.com/yumemi-btn/v1/blob/master/README.md" target="_blank">利用規約</a>を読んでね)</small>
-    </div>
-    <div class="nav">
-        <div class="playlist_loaded" v-if="playlist_loaded">
-            <span class="popup">プレイリストを読み込みました</span>
+    <h1>ユメミボタン v1.4 <small>-非公式-</small></h1>
+    <div id="normalmode" v-show="!advmode">
+        <div class="description">
+            台湾でねこちゃんに憧れる罵倒ロリママ系VTuber <a href="https://yumemich.com/" target="_blank">くもの上ユメミ</a> <small>(<a href="https://www.youtube.com/channel/UCRUFY2ZCyVOvC-1rJIVZlKg" target="_blank">Youtube</a> <a href="https://twitter.com/Kumonoue_Yumemi" target="_blank">Twitter</a>)</small> ちゃんの非公式ボタンです。<br>
+            現在 {{ sound_list.length - 8 }} 個のボイスが登録されてるよ！ボタン右クリック(or <a href="https://github.com/yumemi-btn/v1/archive/master.zip" target="_blank">ZIPで一括</a>)ダウンロードも出来るよ！ <small>(<a href="https://github.com/yumemi-btn/v1/blob/master/README.md" target="_blank">利用規約</a>を読んでね)</small><br>
+            Twitterでみんなが作ったプレイリストを探す！ → <a href="https://twitter.com/search?q=%23%E3%83%A6%E3%83%A1%E3%83%9F%E3%83%9C%E3%82%BF%E3%83%B3&src=typed_query&f=live" target="_blank">#ユメミボタン</a> / <a href="https://twitter.com/search?q=%23%E3%83%A6%E3%83%A1%E3%83%9F%E3%83%9C%E3%82%BF%E3%83%B3R&src=typed_query&f=live" target="_blank">#ユメミボタンR</a>
         </div>
-        <button v-on:click="playSoundList(playlist)">再生</button>
-        <button v-on:click="playSoundListRandom(playlist)">ランダム再生</button>
-        <button v-on:click="() => { this.stop = true }" title="次の音声から停止します">停止</button>
-        <button v-on:click="clearPlaylist">全て削除</button>
-        <button v-on:click="postTweet('ユメミボタン,くもユメ')">#ユメミボタン に投稿</button>
-        <button v-on:click="postTweet('ユメミボタンR')">#ユメミボタンR に投稿</button>
-    </div>
-    <div id="playlist" class="playlist">
-        <div class="playlist_content">
-            <div v-show="!playlist.length">＊プレイリストは空です＊<br>(+)ボタンを押すとプレイリストに追加されます。追加後にドラッグ＆ドロップで並び替えも出来るよ！<br>プレイリストはURLに反映されるので、ブックマークに保存したり、共有したり出来ます！</div>
-            <draggable :list="playlist" class="playlist_drag">
-                <div class="sound" v-for="(sound, index) in playlist">
-                    <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="playlist.splice(index, 1)" title="再生 / ホイールクリックで削除" @contextmenu.prevent="$refs.pctx.open($event, {sound, index})">{{ sound.name }}</button>
-                    <button class="delete-btn" v-on:click="playlist.splice(index, 1)" title="プレイリストから削除">x</button>
+        <div class="nav">
+            <div class="playlist_loaded" v-if="playlist_loaded">
+                <span class="popup">プレイリストを読み込みました！再生ボタンを押してね！</span>
+            </div>
+            <button v-on:click="playSoundListADV(playlist)">再生</button>
+            <button v-on:click="playSoundList(playlist)">試聴</button>
+            <button v-on:click="playSoundListRandom(playlist)">ランダム試聴</button>
+            <button v-on:click="() => { this.stop = true }" title="次の音声から停止します">停止</button>
+            <button v-on:click="clearPlaylist">全て削除</button>
+            <button v-on:click="postTweet('ユメミボタン,くもユメ')">#ユメミボタン に投稿</button>
+            <button v-on:click="postTweet('ユメミボタンR')">#ユメミボタンR に投稿</button>
+        </div>
+        <div id="playlist" class="playlist">
+            <div class="playlist_content">
+                <div v-show="!playlist.length">＊プレイリストは空です＊<br>(+)ボタンを押すとプレイリストに追加されます。追加後にドラッグ＆ドロップで並び替えも出来るよ！<br>プレイリストはURLに反映されるので、ブックマークに保存したり、共有したり出来ます！</div>
+                <draggable :list="playlist" class="playlist_drag">
+                    <div class="sound" v-for="(sound, index) in playlist">
+                        <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="playlist.splice(index, 1)" title="再生 / ホイールクリックで削除" @contextmenu.prevent="$refs.pctx.open($event, {sound, index})">{{ sound.name }}</button>
+                        <button class="delete-btn" v-on:click="playlist.splice(index, 1)" title="プレイリストから削除">x</button>
+                    </div>
+                </draggable>
+            </div>
+        </div>
+        <div class="search">
+            <div class="search-category">
+                <button v-for="(category, index) in category_list" v-on:click="setCategory(category)">{{ category }}</button>
+                <button v-on:click="() => {this.search = ''; this.category = ''}" title="キーワード/カテゴリをクリア">✕</button>
+            </div>
+            <div class="search-form">
+                <input type="text" v-model="search" placeholder="キーワードで絞り込み (スペース区切りでOR検索)" v-bind:disabled="!!this.category">
+                <button v-on:click="() => {this.search = ''; this.category = ''}" title="キーワード/カテゴリをクリア">✕</button>
+            </div>
+        </div>
+        <div class="workarea" v-show="workarea.length > 0">
+            <h2>ワークエリア <small> 一時保管場所です。ホイールクリックでも追加/削除出来ます！ <button v-on:click="clearWorkarea">全て削除</button></small></h2>
+            <draggable :list="workarea" class="workarea_drag">
+                <div class="sound" v-for="(sound, index) in workarea">
+                    <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="workarea.splice(index, 1)" @contextmenu.prevent="$refs.wctx.open($event, {sound, index})" v-bind:title="sound.name">{{ sound.name }}</button>
+                    <button class="add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
+                    <button class="delete-btn" v-on:click="workarea.splice(index, 1)" title="ワークエリアから削除">x</button>
                 </div>
             </draggable>
         </div>
-    </div>
-    <div class="search">
-        <div class="search-category">
-            <button v-for="(category, index) in category_list" v-on:click="setCategory(category)">{{ category }}</button>
-            <button v-on:click="() => {this.search = ''; this.category = ''}" title="キーワード/カテゴリをクリア">✕</button>
-        </div>
-        <div class="search-form">
-            <input type="text" v-model="search" placeholder="キーワードで絞り込み (スペース区切りでOR検索)" v-bind:disabled="!!this.category">
-            <button v-on:click="() => {this.search = ''; this.category = ''}" title="キーワード/カテゴリをクリア">✕</button>
-        </div>
-    </div>
-    <div class="workarea" v-show="workarea.length > 0">
-        <h2>ワークエリア <small> 一時保管場所です。ホイールクリックでも追加/削除出来ます！ <button v-on:click="clearWorkarea">全て削除</button></small></h2>
-        <draggable :list="workarea" class="workarea_drag">
-            <div class="sound" v-for="(sound, index) in workarea">
-                <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="workarea.splice(index, 1)" @contextmenu.prevent="$refs.wctx.open($event, {sound, index})" v-bind:title="sound.name">{{ sound.name }}</button>
-                <button class="add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
-                <button class="delete-btn" v-on:click="workarea.splice(index, 1)" title="ワークエリアから削除">x</button>
-            </div>
-        </draggable>
-    </div>
-    <div class="content">
-        <article class="episode" v-for="(episode, index) in episodes" v-bind:class="{ new: episode.new }" v-show="!filtered || episode.filtered_sounds.length">
-            <header>
-                <h2 class="episode-title"><span v-if="episode.date">{{ episode.date}} - </span>{{ episode.title }}</h2>
-                <div class="episode-thumbnail" v-if="episode.youtube">
-                    <a v-bind:href="`https://www.youtube.com/watch?v=${episode.youtube}`" target="_blank">
-                        <img v-bind:src="`https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg`" v-bind:srcset="`https://img.youtube.com/vi/${episode.youtube}/mqdefault.jpg 1x, https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg 2x`" loading="lazy">
-                    </a>
+        <div class="content">
+            <article class="episode" v-for="(episode, index) in episodes" v-bind:class="{ new: episode.new }" v-show="!filtered || episode.filtered_sounds.length">
+                <header>
+                    <h2 class="episode-title"><span v-if="episode.date">{{ episode.date}} - </span>{{ episode.title }}</h2>
+                    <div class="episode-thumbnail" v-if="episode.youtube">
+                        <a v-bind:href="`https://www.youtube.com/watch?v=${episode.youtube}`" target="_blank">
+                            <img v-bind:src="`https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg`" v-bind:srcset="`https://img.youtube.com/vi/${episode.youtube}/mqdefault.jpg 1x, https://img.youtube.com/vi/${episode.youtube}/maxresdefault.jpg 2x`" loading="lazy">
+                        </a>
+                    </div>
+                </header>
+                <div class="episode-content">
+                    <div class="sound" v-for="(sound, index) in (filtered ? episode.filtered_sounds : episode.sounds)">
+                        <button class="sound-btn" type="button" @click="playSound(sound)" @mousedown.middle.prevent="workarea.push(sound)" @contextmenu.prevent="$refs.sctx.open($event, sound)" title="再生 / ホイールクリックでワークエリアに追加">{{ sound.name }}</button>
+                        <button class="add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
+                    </div>
                 </div>
-            </header>
-            <div class="episode-content">
-                <div class="sound" v-for="(sound, index) in (filtered ? episode.filtered_sounds : episode.sounds)">
-                    <button class="sound-btn" type="button" @click="playSound(sound)" @mousedown.middle.prevent="workarea.push(sound)" @contextmenu.prevent="$refs.sctx.open($event, sound)" title="再生 / ホイールクリックでワークエリアに追加">{{ sound.name }}</button>
-                    <button class="add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
+            </article>
+        </div>
+        <div>
+            <p>
+                <button v-on:click="playSoundListRandom(sound_list)">全てをランダム再生</button>
+                <button v-on:click="playSoundListRandom(sound_list_filtered)">今見えているもの全てをランダム再生</button>
+            </p>
+        </div>
+        <div class="gotoTop" v-on:click="scrollTo(0, 0)">goto top</div>
+
+        <context-menu class="context-menu" ref="sctx" @ctx-open="(event) => {this.sound = event}">
+            <li class="menuitem" @click="workarea.push(sound)">ワークエリアに追加</li>
+            <li class="menuitem" @click="openSoundDetail(sound)">詳細ページを開く</li>
+            <li class="menuitem" @click="openSoundFile(sound)">ファイルを開く</li>
+            <li class="menuitem" @click="downloadSound(sound)">ダウンロード</li>
+        </context-menu>
+        <context-menu class="context-menu" ref="wctx" @ctx-open="(event) => {this.sound = event.sound; this.index = event.index}">
+            <li class="menuitem" @click="workarea.splice(index, 1)">ワークエリアから削除</li>
+            <li class="menuitem" @click="openSoundDetail(sound)">詳細ページを開く</li>
+            <li class="menuitem" @click="openSoundFile(sound)">ファイルを開く</li>
+            <li class="menuitem" @click="downloadSound(sound)">ダウンロード</li>
+        </context-menu>
+        <a download id="downloadLink" style="display:none;"></a>
+
+        <context-menu class="context-menu" ref="pctx" @ctx-open="(event) => {this.sound = event.sound; this.index = event.index}">
+            <li class="menuitem" @click="playSoundList(playlist.slice(index))">この位置から試聴</li>
+            <li class="menuitem" @click="playlist.push(sound)">同じものを追加</li>
+            <li class="menuitem" @click="workarea.push(sound)">ワークエリアに追加</li>
+            <hr>
+            <li class="menuitem" @click="openSoundDetail(sound)">詳細ページを開く</li>
+            <li class="menuitem" @click="openSoundFile(sound)">ファイルを開く</li>
+            <li class="menuitem" @click="downloadSound(sound)">ダウンロード</li>
+        </context-menu>
+
+        <footer>
+            <p>
+                Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a> /
+                Extra: <a href="./extra/save-alarm.html">くもの上ユメミアラーム</a> - <a href="./extra/kotoba.html">くもの上ユメミのふわふわ言葉・チクチク言葉</a>
+            </p>
+        </footer>
+    </div>
+    <div id="advmode" v-show="advmode">
+        <div class="close-btn" v-on:click="() => {this.advmode = false}">✖</div>
+        <div class="messages_outline">
+            <div class="messages_background">
+                <div class="messages_wrapper">
+                    <div class="messages">
+                        <div class="message" v-for="message in advmode_messages">
+                            {{ message }}
+                        </div>
+                    </div>
                 </div>
             </div>
-        </article>
+        </div>
+        <div class="character">
+            <transition name="fade"><img loading="lazy" v-show="['❤', '性癖', 'セリフ'].includes(advmode_category)" src="./assets/advmode/char01.png"></transition>
+            <transition name="fade"><img loading="lazy" v-show="['かわいい'].includes(advmode_category)" src="./assets/advmode/char02.png"></transition>
+            <transition name="fade"><img loading="lazy" v-show="['ワード', 'ひとこと', 'ママ', 'その他', 'カウント', '挨拶'].includes(advmode_category)" src="./assets/advmode/char03.png"></transition>
+            <transition name="fade"><img loading="lazy" v-show="['てんぱり'].includes(advmode_category)" src="./assets/advmode/char04.png"></transition>
+            <transition name="fade"><img loading="lazy" v-show="['効果音'].includes(advmode_category)" src="./assets/advmode/char06.png"></transition>
+            <transition name="fade"><img loading="lazy" v-show="['笑い'].includes(advmode_category)" src="./assets/advmode/char07.png"></transition>
+            <transition name="fade"><img loading="lazy" v-show="['罵倒', '叩く'].includes(advmode_category)" src="./assets/advmode/char08.png"></transition>
+        </div>
     </div>
-    <div>
-        <p>
-            <button v-on:click="playSoundListRandom(sound_list)">全てをランダム再生</button>
-            <button v-on:click="playSoundListRandom(sound_list_filtered)">今見えているもの全てをランダム再生</button>
-        </p>
-    </div>
-    <div class="gotoTop" v-on:click="scrollTo(0, 0)">goto top</div>
 
-    <context-menu class="context-menu" ref="sctx" @ctx-open="(event) => {this.sound = event}">
-        <li class="menuitem" @click="workarea.push(sound)">ワークエリアに追加</li>
-        <li class="menuitem" @click="openSoundDetail(sound)">詳細ページを開く</li>
-        <li class="menuitem" @click="openSoundFile(sound)">ファイルを開く</li>
-        <li class="menuitem" @click="downloadSound(sound)">ダウンロード</li>
-    </context-menu>
-    <context-menu class="context-menu" ref="wctx" @ctx-open="(event) => {this.sound = event.sound; this.index = event.index}">
-        <li class="menuitem" @click="workarea.splice(index, 1)">ワークエリアから削除</li>
-        <li class="menuitem" @click="openSoundDetail(sound)">詳細ページを開く</li>
-        <li class="menuitem" @click="openSoundFile(sound)">ファイルを開く</li>
-        <li class="menuitem" @click="downloadSound(sound)">ダウンロード</li>
-    </context-menu>
-    <a download id="downloadLink" style="display:none;"></a>
+    <script src="./sounds.js"></script>
 
-    <context-menu class="context-menu" ref="pctx" @ctx-open="(event) => {this.sound = event.sound; this.index = event.index}">
-        <li class="menuitem" @click="playSoundList(playlist.slice(index))">この位置から再生</li>
-        <li class="menuitem" @click="playlist.push(sound)">同じものを追加</li>
-        <li class="menuitem" @click="workarea.push(sound)">ワークエリアに追加</li>
-        <hr>
-        <li class="menuitem" @click="openSoundDetail(sound)">詳細ページを開く</li>
-        <li class="menuitem" @click="openSoundFile(sound)">ファイルを開く</li>
-        <li class="menuitem" @click="downloadSound(sound)">ダウンロード</li>
-    </context-menu>
+    <script>
+        function hiraToKata(str) {
+            return str.replace(/[\u3041-\u3096]/g, ch =>
+                String.fromCharCode(ch.charCodeAt(0) + 0x60)
+            )
+        }
+    </script>
 
-    <footer>
-        <p>
-            Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a> /
-            Extra: <a href="./extra/save-alarm.html">くもの上ユメミアラーム</a> - <a href="./extra/kotoba.html">くもの上ユメミのふわふわ言葉・チクチク言葉</a>
-        </p>
-    </footer>
-</div>
+    <script>
+        window.onload = () => {
+            const contextMenu = window.VueContextMenu
+            const downloadLink = document.getElementById("downloadLink")
 
-<script src="./sounds.js"></script>
-
-<script>
-    function hiraToKata(str) {
-        return str.replace(/[\u3041-\u3096]/g, ch =>
-            String.fromCharCode(ch.charCodeAt(0) + 0x60)
-        )
-    }
-</script>
-
-<script>
-    window.onload = () => {
-        const contextMenu = window.VueContextMenu
-        const downloadLink = document.getElementById("downloadLink")
-
-        const app = new Vue({
-            el: '#app',
-            components: {
-                contextMenu
-            },
-            data: {
-                episodes: episodes,
-                playlist: [],
-                playlist_fixed: false,
-                playlist_loaded: false,
-                workarea: [],
-                search: '',
-                category: '',
-                stop: false
-            },
-            computed: {
-                filtered: function () {
-                    return !!(this.querys) || !!(this.category)
+            const app = new Vue({
+                el: '#app',
+                components: {
+                    contextMenu
                 },
-                querys: function () {
-                    if (!this.category && this.search.trim()) {
-                        return this.search.split(/\s+/)
-                    } else {
-                        return false
+                data: {
+                    episodes: episodes,
+                    playlist: [],
+                    playlist_fixed: false,
+                    playlist_loaded: false,
+                    workarea: [],
+                    search: '',
+                    category: '',
+                    stop: false,
+                    advmode: false,
+                    advmode_messages: [],
+                    advmode_category: ''
+                },
+                computed: {
+                    filtered: function () {
+                        return !!(this.querys) || !!(this.category)
+                    },
+                    querys: function () {
+                        if (!this.category && this.search.trim()) {
+                            return this.search.split(/\s+/)
+                        } else {
+                            return false
+                        }
+                    },
+                    sound_list: function () {
+                        return [].concat(...this.episodes.map(episode => episode.sounds))
+                    },
+                    sound_list_filtered: function () {
+                        return [].concat(...this.episodes.map(episode => episode.filtered_sounds))
+                    },
+                    category_list: function () {
+                        return [...new Set(this.sound_list.map(sound => sound.category))].sort().filter(Boolean)
                     }
                 },
-                sound_list: function () {
-                    return [].concat(...this.episodes.map(episode => episode.sounds))
-                },
-                sound_list_filtered: function () {
-                    return [].concat(...this.episodes.map(episode => episode.filtered_sounds))
-                },
-                category_list: function () {
-                    return [...new Set(this.sound_list.map(sound => sound.category))].sort().filter(Boolean)
-                }
-            },
-            watch: {
-                playlist: function () {
-                    location.hash = this.playlist.map(sound => sound.id).join(',')
-                },
-                querys: function () {
-                    if (!this.querys) { return }
-                    this.episodes.forEach(episode => {
-                        episode.filtered_sounds = episode.sounds.filter(sound => {
-                            return this.querys.find(query => {
-                                return hiraToKata(sound.name).includes(hiraToKata(query))
+                watch: {
+                    playlist: function () {
+                        location.hash = this.playlist.map(sound => sound.id).join(',')
+                    },
+                    querys: function () {
+                        if (!this.querys) { return }
+                        this.episodes.forEach(episode => {
+                            episode.filtered_sounds = episode.sounds.filter(sound => {
+                                return this.querys.find(query => {
+                                    return hiraToKata(sound.name).includes(hiraToKata(query))
+                                })
                             })
                         })
-                    })
-                },
-                category: function () {
-                    if (!this.category) { return }
-                    this.episodes.forEach(episode => {
-                        episode.filtered_sounds = episode.sounds.filter(sound => {
-                            return sound.category === this.category
+                    },
+                    category: function () {
+                        if (!this.category) { return }
+                        this.episodes.forEach(episode => {
+                            episode.filtered_sounds = episode.sounds.filter(sound => {
+                                return sound.category === this.category
+                            })
                         })
-                    })
-                    this.search = `＊カテゴリ 「${this.category}」 を表示中＊`
-                },
-                workarea: function () {
-                    localStorage.setItem('workarea', JSON.stringify(this.workarea))
-                }
-            },
-            mounted: function () {
-                this.loadPlaylist()
-
-                if (this.playlist.length > 0) {
-                    this.playlist_loaded = true
-                }
-
-                try {
-                    let workarea_save = JSON.parse(localStorage.getItem('workarea'))
-                    if (workarea_save.length > 0) {
-                        this.workarea = workarea_save
-                    }
-                } catch (e) {
-                    console.error(e)
-                }
-            },
-            methods: {
-                playSound: async function (sound) {
-                    return new Promise(resolve => {
-                        (new Howl({
-                            src: sound.filepath,
-                            onend: () => {
-                                resolve()
-                            }
-                        })).play()
-                    })
-                },
-                playSoundList: async function (soundlist) {
-                    this.stop = false
-                    for (const sound of soundlist) {
-                        if (this.stop) { break; }
-                        await this.playSound(sound)
+                        this.search = `＊カテゴリ 「${this.category}」 を表示中＊`
+                    },
+                    workarea: function () {
+                        localStorage.setItem('workarea', JSON.stringify(this.workarea))
                     }
                 },
-                playSoundListRandom: async function (soundlist) {
-                    await this.playSoundList(soundlist.map((a) => [Math.random(), a]).sort((a, b) => a[0] - b[0]).map((a) => a[1]))
-                },
-                setCategory: function (category) {
-                    this.category = category
-                },
-                loadPlaylist: function () {
+                mounted: function () {
+                    this.loadPlaylist()
+
+                    if (this.playlist.length > 0) {
+                        this.playlist_loaded = true
+                    }
+
                     try {
-                        if (location.hash) {
-                            let sound_ids = location.hash.slice(1).split(',')
-
-                            this.playlist = sound_ids.map(id => {
-                                return this.sound_list.find(sound => sound.id === id);
-                            }).filter(Boolean)
+                        let workarea_save = JSON.parse(localStorage.getItem('workarea'))
+                        if (workarea_save.length > 0) {
+                            this.workarea = workarea_save
                         }
                     } catch (e) {
                         console.error(e)
                     }
                 },
-                clearPlaylist: function () {
-                    if (confirm("プレイリストを削除します。よろしいですか？")) {
-                        this.playlist.splice(0)
-                    }
-                },
-                clearWorkarea: function () {
-                    if (confirm("ワークエリアを削除します。よろしいですか？")) {
-                        this.workarea.splice(0)
-                    }
-                },
-                postTweet: function (tags) {
-                    if (this.playlist.length == 0) {
-                        alert("プレイリストが空です……！")
-                        return
-                    }
-                    let list = this.playlist.slice(0, 3).map(sound => sound.name).join(' -> ')
-                    let url = `https://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(`プレイリストを作成しました！ [${list}]`)}&hashtags=${encodeURIComponent(tags)}`
-                    window.open(url)
-                },
-                onScroll: function () {
-                    let playlist_elm = document.getElementById('playlist')
-                    let rect = playlist_elm.getBoundingClientRect()
-                    if (rect.top <= 0) {
-                        this.playlist_fixed = true
-                    } else {
-                        this.playlist_fixed = false
-                    }
-                },
-                openSoundDetail: function (sound) {
-                    window.open('./detail.html?sound=' + sound.id, '_blank')
-                },
-                openSoundFile: function (sound) {
-                    window.open(sound.filepath, '_blank')
-                },
-                downloadSound: function (sound) {
-                    downloadLink.href = sound.filepath
-                    downloadLink.click()
-                    downloadLink.removeAttribute('href')
-                }
-            }
-        })
+                methods: {
+                    playSound: async function (sound) {
+                        return new Promise(resolve => {
+                            (new Howl({
+                                src: sound.filepath,
+                                onend: () => {
+                                    resolve()
+                                }
+                            })).play()
+                        })
+                    },
+                    playSoundList: async function (soundlist) {
+                        this.stop = false
+                        for (const sound of soundlist) {
+                            if (this.stop) { break; }
+                            await this.playSound(sound)
+                        }
+                    },
+                    playSoundListADV: async function (soundlist) {
+                        this.stop = true
+                        this.advmode = true
+                        this.advmode_messages = []
+                        this.advmode_category = ''
 
-        window.addEventListener("hashchange", app.loadPlaylist)
-        window.addEventListener("scroll", app.onScroll)
-    }
-</script>
+                        const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
+                        await sleep(1000);
+
+                        for (const sound of soundlist) {
+                            if (!this.advmode) { break; }
+                            this.advmode_messages.push(sound.name)
+                            this.advmode_category = sound.category
+                            await this.playSound(sound)
+                        }
+
+                        if (this.advmode) {
+                            this.advmode_category = ''
+                            await sleep(3000);
+                        }
+                        this.advmode = false
+                    },
+                    playSoundListRandom: async function (soundlist) {
+                        await this.playSoundList(soundlist.map((a) => [Math.random(), a]).sort((a, b) => a[0] - b[0]).map((a) => a[1]))
+                    },
+                    setCategory: function (category) {
+                        this.category = category
+                    },
+                    loadPlaylist: function () {
+                        try {
+                            if (location.hash) {
+                                let sound_ids = location.hash.slice(1).split(',')
+
+                                this.playlist = sound_ids.map(id => {
+                                    return this.sound_list.find(sound => sound.id === id);
+                                }).filter(Boolean)
+                            }
+                        } catch (e) {
+                            console.error(e)
+                        }
+                    },
+                    clearPlaylist: function () {
+                        if (confirm("プレイリストを削除します。よろしいですか？")) {
+                            this.playlist.splice(0)
+                        }
+                    },
+                    clearWorkarea: function () {
+                        if (confirm("ワークエリアを削除します。よろしいですか？")) {
+                            this.workarea.splice(0)
+                        }
+                    },
+                    postTweet: function (tags) {
+                        if (this.playlist.length == 0) {
+                            alert("プレイリストが空です……！")
+                            return
+                        }
+                        let list = this.playlist.slice(0, 3).map(sound => sound.name).join(' -> ')
+                        let url = `https://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(`プレイリストを作成しました！ [${list}]`)}&hashtags=${encodeURIComponent(tags)}`
+                        window.open(url)
+                    },
+                    onScroll: function () {
+                        let playlist_elm = document.getElementById('playlist')
+                        let rect = playlist_elm.getBoundingClientRect()
+                        if (rect.top <= 0) {
+                            this.playlist_fixed = true
+                        } else {
+                            this.playlist_fixed = false
+                        }
+                    },
+                    openSoundDetail: function (sound) {
+                        window.open('./detail.html?sound=' + sound.id, '_blank')
+                    },
+                    openSoundFile: function (sound) {
+                        window.open(sound.filepath, '_blank')
+                    },
+                    downloadSound: function (sound) {
+                        downloadLink.href = sound.filepath
+                        downloadLink.click()
+                        downloadLink.removeAttribute('href')
+                    }
+                }
+            })
+
+            window.addEventListener("hashchange", app.loadPlaylist)
+            window.addEventListener("scroll", app.onScroll)
+        }
+    </script>
