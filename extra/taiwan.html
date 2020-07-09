@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<head>
+
+    <meta charset="utf-8">
+    <title>雲之上夢見罵倒製造機</title>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165266281-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-165266281-1');
+    </script>
+    <meta name="google-site-verification" content="lmaQiF69AsC9ti8OOHnhlaOCH7I5qOgr1EhD2QVTcb4" />
+
+    <!--<meta name="description" content="">-->
+
+    <meta name="twitter:card" content="summary">
+    <meta name="og:title" content="雲之上夢見罵倒製造機">
+    <meta name="og:image" content="https://yumemi-btn.github.io/v1/assets/card.png">
+
+    <link rel="icon" href="https://yumemi-btn.github.io/v1/assets/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://yumemi-btn.github.io/v1/assets/apple-touch-icon.png">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/howler@2.2.0/dist/howler.min.js" crossorigin="anonymous"></script>
+
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+
+<style>
+    @font-face {
+        font-family: 'mamelon_min';
+        src: url('./taiwan/mamelon_min.woff') format('woff');
+    }
+
+    body {
+        font-family: "mamelon_min";
+        background-color: #8BDCDD;
+        color: #8BDCDD;
+        margin: 0;
+        text-align: center;
+    }
+
+    #app {
+        background-color: #fff;
+        margin: 3em;
+        box-shadow: 0 0 20px 3px rgba(0, 0, 0, 0.3);
+        border-radius: 1em;
+        padding: 1em;
+    }
+
+    h1 {
+        font-size: 4em;
+        margin: 0 1rem 0;
+        color: #8BDCDD;
+        background: linear-gradient(90deg, #f00 0%, #f80 14.28%, #dd0 28.56%, #0d0 42.85%, #0dd 57.14%, #00f 71.42%, #e0e 85.71%, #f00 100%) 0% center / 200% auto;
+
+        animation: title 5s linear infinite;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-fill-color: transparent;
+    }
+
+    h1 span {
+        display: inline-block;
+    }
+
+    h1::before,
+    h1::after {
+        content: "＊";
+        animation: blink 1s step-end infinite;
+    }
+
+    @keyframes title {
+        to {
+            background-position-x: 200%;
+        }
+    }
+
+    @keyframes blink {
+        75% {
+            visibility: hidden;
+        }
+    }
+
+    .sounds {
+        margin: 2em 0 2.2em;
+        font-size: 4em;
+    }
+
+    .sound-btn {
+        display: inline-block;
+        margin: 0 1rem;
+        cursor: pointer;
+        user-select: none;
+        border-bottom: 3px solid rgba(139, 220, 221, 0.2);
+        transition: 0.4s border-bottom-color;
+    }
+
+    .sound-btn:hover {
+        transition: 0.0s border-bottom-color;
+        border-bottom-color: inherit;
+    }
+
+    .sound-btn:active {
+        color: #27BBC8;
+    }
+
+    hr {
+        border: 1px solid #8BDCDD;
+    }
+
+
+    footer {
+        font-size: 1.8em;
+        line-height: 1;
+        margin-bottom: 0.6rem;
+    }
+
+    .share-btn {
+        height: 28px;
+        margin: 1.6em auto 2em;
+    }
+
+    .info {
+        margin: 1em 3em;
+        color: #fff;
+        font-family: sans-serif;
+    }
+
+    .info a {
+        color: #fff;
+    }
+
+    .info iframe {
+        margin-top: 0.6em;
+        max-width: 100%;
+
+    }
+
+    @media screen and (max-width: 480px) {
+        h1 {
+            font-size: 2em;
+        }
+
+        .sounds {
+            font-size: 3em;
+        }
+
+        footer {
+            font-size: 1.4em;
+        }
+
+        #app {
+            margin: 1em;
+        }
+
+        .info {
+            margin: 1em;
+        }
+    }
+
+</style>
+
+
+<div id="app" class="section">
+    <h1><span>雲之上夢見</span><span>罵倒製造機</span></h1>
+    <hr>
+    <div class="sounds">
+        <div class="sound-btn" v-for="sound in sounds" v-on:click="playSound(sound)">{{sound.name}}</div>
+    </div>
+    <footer>
+        這只是一部分！您可以使用 “<a href="/v1/">ユメミボタン</a>” 收聽更多音頻！
+    </footer>
+</div>
+
+<div class="info">
+    <h2>INFORMATION</h2>
+    <div>
+        <strong>Yumemi Kumonoue (くもの上ユメミ)</strong> -
+        <a href="http://yumemich.com/" target="_blank">OfficialWebSite</a> / <a href="https://www.youtube.com/channel/UCRUFY2ZCyVOvC-1rJIVZlKg" target="_blank">YouTube</a> / <a href="https://twitter.com/Kumonoue_Yumemi" target="_blank">Twitter</a>
+    </div>
+    <div>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/phdtIZZrE1U?cc_load_policy=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PLPFk2-xCPfDbAoPSJmiVpbnqeCqEMdiJ8&cc_load_policy=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PLYuTEKWbxwF8uNS3Fdmq37SrpYe3WyB4L" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="share-btn">
+        <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false" data-size="large"></a>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8">
+        </script>
+    </div>
+    <div>
+        Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a>
+    </div>
+</div>
+
+<script>
+    const app = new Vue({
+        el: '#app',
+        data: {
+            sounds: [
+                {
+                    name: '安安',
+                    filepath: [
+                        '/v1/sounds/200626/20-安安～.m4a',
+                        '/v1/sounds/200626/29-安安～！.m4a'
+                    ]
+                },
+                {
+                    name: '宅宅',
+                    filepath: [
+                        '/v1/sounds/200626/25-宅……宅宅？.m4a',
+                        '/v1/sounds/200626/26-宅宅！.m4a',
+                        '/v1/sounds/200626/27-安安 宅宅！.m4a',
+                        '/v1/sounds/200626/61-ユーアー宅宅.m4a',
+                        '/v1/sounds/200626/74-宅宅？.m4a',
+                        '/v1/sounds/200626/75-宅宅.m4a',
+                        '/v1/sounds/200626/76-安安宅宅～.m4a',
+                        '/v1/sounds/200626/77-謝謝宅宅～ .m4a',
+                        '/v1/sounds/200626/78-你好宅宅～ .m4a',
+                        '/v1/sounds/200626/79-宅宅.m4a',
+                        '/v1/sounds/200626/86-宅宅～.m4a',
+                        '/v1/sounds/200626/96-宅宅？.m4a',
+                        '/v1/sounds/200626/99-宅宅.m4a',
+                        '/v1/sounds/200626/104-宅宅 辛苦了～.m4a',
+                    ]
+                },
+                {
+                    name: '肥宅',
+                    filepath: [
+                        '/v1/sounds/200626/34-肥宅？.m4a',
+                        '/v1/sounds/200626/35-肥宅.m4a',
+                        '/v1/sounds/200626/37-肥……肥宅？肥宅？.m4a',
+                        '/v1/sounds/200626/38-肥宅.m4a',
+                        '/v1/sounds/200626/42-肥宅 (笑い).m4a',
+                        '/v1/sounds/200626/45-肥宅.m4a',
+                        '/v1/sounds/200626/46-肥宅.m4a',
+                        '/v1/sounds/200626/47-肥……肥宅.m4a',
+                        '/v1/sounds/200626/94-肥……肥……肥宅.m4a',
+                        '/v1/sounds/200626/95-肥宅.m4a',
+                        '/v1/sounds/200626/97-肥宅？.m4a',
+                        '/v1/sounds/200626/98-肥宅.m4a',
+                    ]
+                },
+                {
+                    name: '臭肥宅',
+                    filepath: [
+                        '/v1/sounds/200626/80-臭肥宅.m4a',
+                        '/v1/sounds/200626/81-臭肥宅.m4a',
+                        '/v1/sounds/200706/01-臭肥宅.m4a',
+                        '/v1/sounds/200706/02-臭肥宅.m4a',
+                    ]
+                },
+                {
+                    name: '雑魚',
+                    filepath: [
+                        '/v1/sounds/200626/91-雑魚(ザーユー).m4a',
+                        '/v1/sounds/200626/92-雑魚(ザーユー).m4a',
+                        '/v1/sounds/200626/93-雑魚(ザーユー).m4a',
+                        '/v1/sounds/200626/100-雑魚(ザーユー).m4a',
+                        '/v1/sounds/200626/101-雑魚(ザーユー).m4a',
+                    ]
+                },
+                {
+                    name: '笑声',
+                    filepath: [
+                        '/v1/sounds/200612/40-(引き笑い).m4a',
+                        '/v1/sounds/200612/46-(吹き出し笑い).m4a',
+                        '/v1/sounds/200604/82-(引き笑い).m4a',
+                        '/v1/sounds/200604/90-(引き笑い) あ～.m4a',
+                        '/v1/sounds/200604/95-すーっ (センシティブ笑い声).m4a',
+                        '/v1/sounds/200604/139-(息継ぎの笑い).m4a',
+                        '/v1/sounds/200604/141-あっはは↑ (笑い).m4a',
+                        '/v1/sounds/200604/233-えへへ (笑い) x2.m4a',
+                        '/v1/sounds/200604/303-(掠れた呆れ).m4a',
+                        '/v1/sounds/200604/365-ふふっ (笑い).m4a',
+                        '/v1/sounds/200604/386-って (笑い).m4a',
+                        '/v1/sounds/200604/389-あは (笑い).m4a',
+                        '/v1/sounds/200604/400-(軽い引き笑い).m4a',
+                        '/v1/sounds/200604/425-(引き笑い).m4a',
+                        '/v1/sounds/200604/447-(長めの引き笑い).m4a',
+                        '/v1/sounds/200604/460-(笑い) あぁ～.m4a',
+                        '/v1/sounds/200604/545-(笑い).m4a',
+                        '/v1/sounds/200604/569-(笑い).m4a',
+                        '/v1/sounds/200604/598-ぅふふ ふふ (笑い).m4a',
+                        '/v1/sounds/200604/618-んふふ (笑い).m4a',
+                        '/v1/sounds/200604/624-(笑い) あぁ.m4a',
+                        '/v1/sounds/200604/646-んにゅふふ ふふ (笑い).m4a',
+                        '/v1/sounds/200604/682-んふ (笑い).m4a',
+                        '/v1/sounds/200524/23-(笑い).m4a',
+                        '/v1/sounds/200524/38-(照れ笑い).m4a',
+                        '/v1/sounds/200524/42-にゅあゃはは (笑い).m4a',
+                        '/v1/sounds/200524/44-んははぁ (笑い).m4a',
+                        '/v1/sounds/200524/48-んぁはは (笑い).m4a',
+                        '/v1/sounds/200524/60-んぁはは (笑い).m4a',
+                        '/v1/sounds/200524/112-うわっははは (笑い).m4a',
+                        '/v1/sounds/200524/114-うわっはははは (笑い) いーい？.m4a',
+                        '/v1/sounds/200524/122-あっはっは (笑い).m4a',
+                        '/v1/sounds/200524/124-あの あの あはは (笑い).m4a',
+                        '/v1/sounds/200524/130-あはは あはは (笑い).m4a',
+                        '/v1/sounds/200524/149-えへへへ あはは (高い).m4a',
+                        '/v1/sounds/200514/86-(笑い).m4a',
+                        '/v1/sounds/200514/89-(笑い).m4a',
+                        '/v1/sounds/200514/124-(笑い).m4a',
+                        '/v1/sounds/200514/149-(引き笑い).m4a',
+                        '/v1/sounds/200514/170-あぁ～(疲れ笑い).m4a',
+                        '/v1/sounds/200514/180-(笑い).m4a',
+                        '/v1/sounds/200514/195-(引き笑い).m4a',
+                        '/v1/sounds/200514/212-(疲れ笑い).m4a',
+                        '/v1/sounds/200505/22-(笑い).m4a',
+                        '/v1/sounds/200429/07-(小笑い).m4a',
+                        '/v1/sounds/200429/13-(笑い).m4a',
+                        '/v1/sounds/200429/75-(笑い).m4a',
+                        '/v1/sounds/200429/80-(笑い).m4a',
+                        '/v1/sounds/200429/98-(笑い).m4a',
+                        '/v1/sounds/200423/27-(乾いた笑い).m4a',
+                        '/v1/sounds/200423/30-あの(苦笑い).m4a',
+                        '/v1/sounds/200423/32-(小笑い).m4a',
+                        '/v1/sounds/200423/55-(笑い).m4a',
+                        '/v1/sounds/200423/95-(笑いx3).m4a',
+                        '/v1/sounds/200423/102-(笑い).m4a',
+                        '/v1/sounds/200423/114-(笑い) っあー.m4a',
+                        '/v1/sounds/200423/128-(乾いた笑い) っあー.m4a',
+                        '/v1/sounds/200423/130-(笑い).m4a',
+                        '/v1/sounds/200423/133-(笑い).m4a',
+                        '/v1/sounds/200423/149-(笑い).m4a',
+                        '/v1/sounds/200423/166-(笑い).m4a',
+                        '/v1/sounds/200423/181-(笑い↑).m4a',
+                        '/v1/sounds/200423/237-(呆れ笑い).m4a',
+                        '/v1/sounds/200423/239-(呆れ笑い).m4a',
+                        '/v1/sounds/200423/243-(大きな笑い).m4a',
+                        '/v1/sounds/200423/250-(あはっ).m4a',
+                        '/v1/sounds/200423/260-(笑い).m4a',
+                        '/v1/sounds/200423/264-(笑い↑).m4a',
+                        '/v1/sounds/200423/265-(笑い).m4a',
+                        '/v1/sounds/200423/276-(小笑い).m4a',
+                        '/v1/sounds/200423/283-(笑い あっはっは).m4a',
+                        '/v1/sounds/200423/285-(笑い あっははっ↑).m4a',
+                    ]
+                }
+            ]
+        },
+        methods: {
+            playSound: function (sound) {
+                (new Howl({ src: sound.filepath[Math.floor(Math.random() * sound.filepath.length)] })).play()
+            }
+        }
+    })
+</script>
