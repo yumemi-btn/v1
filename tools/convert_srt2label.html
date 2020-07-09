@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Convert SRT to Label(Audacity)</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+</head>
+
+<style>
+    textarea {
+        height: 20em;
+        width: 100%;
+    }
+
+    #app {
+        width: 80%;
+        margin: auto;
+    }
+
+</style>
+
+
+<div id="app">
+    <h1>Convert SRT to Label(Audacity)</h1>
+    <section>
+        <h2>SRT(Input)</h2>
+        <textarea id="input" v-model="input" placeholder="1&#13;&#10;00:00:10,300 --> 00:00:11,300&#13;&#10;Hello!&#13;&#10;&#13;&#10;2&#13;&#10;00:00:13,380 --> 00:00:17,140&#13;&#10;These sentences will be shown as subtitles.&#13;&#10;&#13;&#10;3&#13;&#10;00:00:17,900 --> 00:00:28,900&#13;&#10;I can even write very long sentences, so I can talk about the shape of a can of corned beef! Isn't it great!&#13;&#10;"></textarea>
+    </section>
+    <section>
+        <h2>Label(Output)</h2>
+        <textarea id="output" v-model="output" placeholder="10.300000	11.300000	Hello!&#13;&#10;13.380000	17.140000	These sentences will be shown as subtitles.&#13;&#10;17.900000	28.900000	I can even write very long sentences, so I can talk about the shape of a can of corned beef! Isn't it great!&#13;&#10;"></textarea>
+    </section>
+</div>
+
+<script>
+    function convertTimestamp(timestamp) {
+        let parsed = timestamp.split(/[:,]/)
+        let hh = parseInt(parsed[0])
+        let mm = parseInt(parsed[1])
+        let ss = parseInt(parsed[2])
+        let ms = parseInt(parsed[3])
+
+        return (hh * 3600 + mm * 60 + ss + ms / 1000).toFixed(6)
+    }
+
+    const app = new Vue({
+        el: '#app',
+        data: {
+            input: '',
+        },
+        computed: {
+            output: function () {
+                let labels = [];
+                (this.input.match(/\d+\n[\d:,\->\s]+\n.+/mg) || []).forEach(label => {
+                    let parsed = label.match(/\d+\n([\d:,]+) --> ([\d:,]+)\n(.+)/m)
+                    let start = convertTimestamp(parsed[1])
+                    let end = convertTimestamp(parsed[2])
+                    let text = parsed[3]
+
+                    labels.push(`${start}\t${end}\t${text}`)
+                });
+
+                return labels.join('\n')
+            }
+        }
+    })
+</script>
