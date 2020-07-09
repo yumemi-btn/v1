@@ -1,6 +1,7 @@
 https://yumemi-btn.github.io/v1/
 https://yumemi-btn.github.io/v1/extra/save-alarm.html
 https://yumemi-btn.github.io/v1/extra/kotoba.html
+https://yumemi-btn.github.io/v1/extra/taiwan.html
 https://yumemi-btn.github.io/v1/detail.html?sound=200604/257
 https://yumemi-btn.github.io/v1/detail.html?sound=200604/255
 https://yumemi-btn.github.io/v1/detail.html?sound=200604/625
