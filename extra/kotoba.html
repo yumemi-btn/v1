@@ -55,8 +55,12 @@
         line-height: 1.4;
     }
 
+    .sound-btn:hover {
+        color: #666;
+    }
+
     .sound-btn:active {
-        color: #999;
+        color: #aaa;
     }
 
     #app {
@@ -117,8 +121,18 @@
     }
 
     footer {
+        font-size: 1.2em;
         margin-top: 1em;
         text-align: center;
+    }
+
+    .youtube {
+        margin: 3em 0 3em;
+        text-align: center;
+    }
+
+    .youtube iframe {
+        max-width: 100%;
     }
 
 </style>
@@ -148,6 +162,11 @@
         クリックで再生できるよ！ <a href="/v1/">ユメミボタン</a>でもっと聴けるよ！ / Author: <a href="https://twitter.com/infinite_chain" target="_blank">無限連鎖講の防止に関する法律</a>
     </footer>
 </div>
+<div class="youtube">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/MGhVP5lp8Kc?start=3690" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PLYuTEKWbxwF8uNS3Fdmq37SrpYe3WyB4L" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+
 
 <script>
     const app = new Vue({
