@@ -588,206 +588,207 @@
             <transition name="fade"><img loading="lazy" v-show="['罵倒', '叩く'].includes(advmode_category)" src="./assets/advmode/char08.png"></transition>
         </div>
     </div>
+</div>
 
-    <script src="./sounds.js"></script>
+<script src="./sounds.js"></script>
 
-    <script>
-        function hiraToKata(str) {
-            return str.replace(/[\u3041-\u3096]/g, ch =>
-                String.fromCharCode(ch.charCodeAt(0) + 0x60)
-            )
-        }
-    </script>
+<script>
+    function hiraToKata(str) {
+        return str.replace(/[\u3041-\u3096]/g, ch =>
+            String.fromCharCode(ch.charCodeAt(0) + 0x60)
+        )
+    }
+</script>
 
-    <script>
-        window.onload = () => {
-            const contextMenu = window.VueContextMenu
-            const downloadLink = document.getElementById("downloadLink")
+<script>
+    window.onload = () => {
+        const contextMenu = window.VueContextMenu
+        const downloadLink = document.getElementById("downloadLink")
 
-            const app = new Vue({
-                el: '#app',
-                components: {
-                    contextMenu
+        const app = new Vue({
+            el: '#app',
+            components: {
+                contextMenu
+            },
+            data: {
+                episodes: episodes,
+                playlist: [],
+                playlist_fixed: false,
+                playlist_loaded: false,
+                workarea: [],
+                search: '',
+                category: '',
+                stop: false,
+                advmode: false,
+                advmode_messages: [],
+                advmode_category: ''
+            },
+            computed: {
+                filtered: function () {
+                    return !!(this.querys) || !!(this.category)
                 },
-                data: {
-                    episodes: episodes,
-                    playlist: [],
-                    playlist_fixed: false,
-                    playlist_loaded: false,
-                    workarea: [],
-                    search: '',
-                    category: '',
-                    stop: false,
-                    advmode: false,
-                    advmode_messages: [],
-                    advmode_category: ''
-                },
-                computed: {
-                    filtered: function () {
-                        return !!(this.querys) || !!(this.category)
-                    },
-                    querys: function () {
-                        if (!this.category && this.search.trim()) {
-                            return this.search.split(/\s+/)
-                        } else {
-                            return false
-                        }
-                    },
-                    sound_list: function () {
-                        return [].concat(...this.episodes.map(episode => episode.sounds))
-                    },
-                    sound_list_filtered: function () {
-                        return [].concat(...this.episodes.map(episode => episode.filtered_sounds))
-                    },
-                    category_list: function () {
-                        return [...new Set(this.sound_list.map(sound => sound.category))].sort().filter(Boolean)
+                querys: function () {
+                    if (!this.category && this.search.trim()) {
+                        return this.search.split(/\s+/)
+                    } else {
+                        return false
                     }
                 },
-                watch: {
-                    playlist: function () {
-                        location.hash = this.playlist.map(sound => sound.id).join(',')
-                    },
-                    querys: function () {
-                        if (!this.querys) { return }
-                        this.episodes.forEach(episode => {
-                            episode.filtered_sounds = episode.sounds.filter(sound => {
-                                return this.querys.find(query => {
-                                    return hiraToKata(sound.name).includes(hiraToKata(query))
-                                })
+                sound_list: function () {
+                    return [].concat(...this.episodes.map(episode => episode.sounds))
+                },
+                sound_list_filtered: function () {
+                    return [].concat(...this.episodes.map(episode => episode.filtered_sounds))
+                },
+                category_list: function () {
+                    return [...new Set(this.sound_list.map(sound => sound.category))].sort().filter(Boolean)
+                }
+            },
+            watch: {
+                playlist: function () {
+                    location.hash = this.playlist.map(sound => sound.id).join(',')
+                },
+                querys: function () {
+                    if (!this.querys) { return }
+                    this.episodes.forEach(episode => {
+                        episode.filtered_sounds = episode.sounds.filter(sound => {
+                            return this.querys.find(query => {
+                                return hiraToKata(sound.name).includes(hiraToKata(query))
                             })
                         })
-                    },
-                    category: function () {
-                        if (!this.category) { return }
-                        this.episodes.forEach(episode => {
-                            episode.filtered_sounds = episode.sounds.filter(sound => {
-                                return sound.category === this.category
-                            })
+                    })
+                },
+                category: function () {
+                    if (!this.category) { return }
+                    this.episodes.forEach(episode => {
+                        episode.filtered_sounds = episode.sounds.filter(sound => {
+                            return sound.category === this.category
                         })
-                        this.search = `＊カテゴリ 「${this.category}」 を表示中＊`
-                    },
-                    workarea: function () {
-                        localStorage.setItem('workarea', JSON.stringify(this.workarea))
+                    })
+                    this.search = `＊カテゴリ 「${this.category}」 を表示中＊`
+                },
+                workarea: function () {
+                    localStorage.setItem('workarea', JSON.stringify(this.workarea))
+                }
+            },
+            mounted: function () {
+                this.loadPlaylist()
+
+                if (this.playlist.length > 0) {
+                    this.playlist_loaded = true
+                }
+
+                try {
+                    let workarea_save = JSON.parse(localStorage.getItem('workarea'))
+                    if (workarea_save.length > 0) {
+                        this.workarea = workarea_save
+                    }
+                } catch (e) {
+                    console.error(e)
+                }
+            },
+            methods: {
+                playSound: async function (sound) {
+                    return new Promise(resolve => {
+                        (new Howl({
+                            src: sound.filepath,
+                            onend: () => {
+                                resolve()
+                            }
+                        })).play()
+                    })
+                },
+                playSoundList: async function (soundlist) {
+                    this.stop = false
+                    for (const sound of soundlist) {
+                        if (this.stop) { break; }
+                        await this.playSound(sound)
                     }
                 },
-                mounted: function () {
-                    this.loadPlaylist()
+                playSoundListADV: async function (soundlist) {
+                    this.stop = true
+                    this.advmode = true
+                    this.advmode_messages = []
+                    this.advmode_category = ''
 
-                    if (this.playlist.length > 0) {
-                        this.playlist_loaded = true
+                    const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
+                    await sleep(1000);
+
+                    for (const sound of soundlist) {
+                        if (!this.advmode) { break; }
+                        this.advmode_messages.push(sound.name)
+                        this.advmode_category = sound.category
+                        await this.playSound(sound)
                     }
 
+                    if (this.advmode) {
+                        this.advmode_category = ''
+                        await sleep(3000);
+                    }
+                    this.advmode = false
+                },
+                playSoundListRandom: async function (soundlist) {
+                    await this.playSoundList(soundlist.map((a) => [Math.random(), a]).sort((a, b) => a[0] - b[0]).map((a) => a[1]))
+                },
+                setCategory: function (category) {
+                    this.category = category
+                },
+                loadPlaylist: function () {
                     try {
-                        let workarea_save = JSON.parse(localStorage.getItem('workarea'))
-                        if (workarea_save.length > 0) {
-                            this.workarea = workarea_save
+                        if (location.hash) {
+                            let sound_ids = location.hash.slice(1).split(',')
+
+                            this.playlist = sound_ids.map(id => {
+                                return this.sound_list.find(sound => sound.id === id);
+                            }).filter(Boolean)
                         }
                     } catch (e) {
                         console.error(e)
                     }
                 },
-                methods: {
-                    playSound: async function (sound) {
-                        return new Promise(resolve => {
-                            (new Howl({
-                                src: sound.filepath,
-                                onend: () => {
-                                    resolve()
-                                }
-                            })).play()
-                        })
-                    },
-                    playSoundList: async function (soundlist) {
-                        this.stop = false
-                        for (const sound of soundlist) {
-                            if (this.stop) { break; }
-                            await this.playSound(sound)
-                        }
-                    },
-                    playSoundListADV: async function (soundlist) {
-                        this.stop = true
-                        this.advmode = true
-                        this.advmode_messages = []
-                        this.advmode_category = ''
-
-                        const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
-                        await sleep(1000);
-
-                        for (const sound of soundlist) {
-                            if (!this.advmode) { break; }
-                            this.advmode_messages.push(sound.name)
-                            this.advmode_category = sound.category
-                            await this.playSound(sound)
-                        }
-
-                        if (this.advmode) {
-                            this.advmode_category = ''
-                            await sleep(3000);
-                        }
-                        this.advmode = false
-                    },
-                    playSoundListRandom: async function (soundlist) {
-                        await this.playSoundList(soundlist.map((a) => [Math.random(), a]).sort((a, b) => a[0] - b[0]).map((a) => a[1]))
-                    },
-                    setCategory: function (category) {
-                        this.category = category
-                    },
-                    loadPlaylist: function () {
-                        try {
-                            if (location.hash) {
-                                let sound_ids = location.hash.slice(1).split(',')
-
-                                this.playlist = sound_ids.map(id => {
-                                    return this.sound_list.find(sound => sound.id === id);
-                                }).filter(Boolean)
-                            }
-                        } catch (e) {
-                            console.error(e)
-                        }
-                    },
-                    clearPlaylist: function () {
-                        if (confirm("プレイリストを削除します。よろしいですか？")) {
-                            this.playlist.splice(0)
-                        }
-                    },
-                    clearWorkarea: function () {
-                        if (confirm("ワークエリアを削除します。よろしいですか？")) {
-                            this.workarea.splice(0)
-                        }
-                    },
-                    postTweet: function (tags) {
-                        if (this.playlist.length == 0) {
-                            alert("プレイリストが空です……！")
-                            return
-                        }
-                        let list = this.playlist.slice(0, 3).map(sound => sound.name).join(' -> ')
-                        let url = `https://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(`プレイリストを作成しました！ [${list}]`)}&hashtags=${encodeURIComponent(tags)}`
-                        window.open(url)
-                    },
-                    onScroll: function () {
-                        let playlist_elm = document.getElementById('playlist')
-                        let rect = playlist_elm.getBoundingClientRect()
-                        if (rect.top <= 0) {
-                            this.playlist_fixed = true
-                        } else {
-                            this.playlist_fixed = false
-                        }
-                    },
-                    openSoundDetail: function (sound) {
-                        window.open('./detail.html?sound=' + sound.id, '_blank')
-                    },
-                    openSoundFile: function (sound) {
-                        window.open(sound.filepath, '_blank')
-                    },
-                    downloadSound: function (sound) {
-                        downloadLink.href = sound.filepath
-                        downloadLink.click()
-                        downloadLink.removeAttribute('href')
+                clearPlaylist: function () {
+                    if (confirm("プレイリストを削除します。よろしいですか？")) {
+                        this.playlist.splice(0)
                     }
+                },
+                clearWorkarea: function () {
+                    if (confirm("ワークエリアを削除します。よろしいですか？")) {
+                        this.workarea.splice(0)
+                    }
+                },
+                postTweet: function (tags) {
+                    if (this.playlist.length == 0) {
+                        alert("プレイリストが空です……！")
+                        return
+                    }
+                    let list = this.playlist.slice(0, 3).map(sound => sound.name).join(' -> ')
+                    let url = `https://twitter.com/share?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(`プレイリストを作成しました！ [${list}]`)}&hashtags=${encodeURIComponent(tags)}`
+                    window.open(url)
+                },
+                onScroll: function () {
+                    let playlist_elm = document.getElementById('playlist')
+                    let rect = playlist_elm.getBoundingClientRect()
+                    if (rect.top <= 0) {
+                        this.playlist_fixed = true
+                    } else {
+                        this.playlist_fixed = false
+                    }
+                },
+                openSoundDetail: function (sound) {
+                    window.open('./detail.html?sound=' + sound.id, '_blank')
+                },
+                openSoundFile: function (sound) {
+                    window.open(sound.filepath, '_blank')
+                },
+                downloadSound: function (sound) {
+                    downloadLink.href = sound.filepath
+                    downloadLink.click()
+                    downloadLink.removeAttribute('href')
                 }
-            })
+            }
+        })
 
-            window.addEventListener("hashchange", app.loadPlaylist)
-            window.addEventListener("scroll", app.onScroll)
-        }
-    </script>
+        window.addEventListener("hashchange", app.loadPlaylist)
+        window.addEventListener("scroll", app.onScroll)
+    }
+</script>
