@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>ユメミボタン v1.4 - くもの上ユメミ非公式ボタン</title>
+    <title>ユメミボタン v1.4.1 - くもの上ユメミ非公式ボタン</title>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165266281-1"></script>
     <script>
@@ -63,6 +63,12 @@
         border-radius: 0.2em;
         transition: 0.3s;
         background-color: #ffffff;
+    }
+
+    .yumemip button {
+        border-color: #f34377;
+        border-style: dotted;
+        color: #f34377;
     }
 
     button:active,
@@ -482,8 +488,10 @@
                 <div v-show="!playlist.length">＊プレイリストは空です＊<br>(+)ボタンを押すとプレイリストに追加されます。追加後にドラッグ＆ドロップで並び替えも出来るよ！<br>プレイリストはURLに反映されるので、ブックマークに保存したり、共有したり出来ます！</div>
                 <draggable :list="playlist" class="playlist_drag">
                     <div class="sound" v-for="(sound, index) in playlist">
-                        <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="playlist.splice(index, 1)" title="再生 / ホイールクリックで削除" @contextmenu.prevent="$refs.pctx.open($event, {sound, index})">{{ sound.name }}</button>
-                        <button class="delete-btn" v-on:click="playlist.splice(index, 1)" title="プレイリストから削除">x</button>
+                        <div v-bind:class="[sound.category == 'Pさん' ? 'yumemip' : '']">
+                            <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="playlist.splice(index, 1)" title="再生 / ホイールクリックで削除" @contextmenu.prevent="$refs.pctx.open($event, {sound, index})">{{ sound.name }}</button>
+                            <button class="delete-btn" v-on:click="playlist.splice(index, 1)" title="プレイリストから削除">x</button>
+                        </div>
                     </div>
                 </draggable>
             </div>
@@ -502,9 +510,11 @@
             <h2>ワークエリア <small> 一時保管場所です。ホイールクリックでも追加/削除出来ます！ <button v-on:click="clearWorkarea">全て削除</button></small></h2>
             <draggable :list="workarea" class="workarea_drag">
                 <div class="sound" v-for="(sound, index) in workarea">
-                    <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="workarea.splice(index, 1)" @contextmenu.prevent="$refs.wctx.open($event, {sound, index})" v-bind:title="sound.name">{{ sound.name }}</button>
-                    <button class="add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
-                    <button class="delete-btn" v-on:click="workarea.splice(index, 1)" title="ワークエリアから削除">x</button>
+                    <div v-bind:class="[sound.category == 'Pさん' ? 'yumemip' : '']">
+                        <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="workarea.splice(index, 1)" @contextmenu.prevent="$refs.wctx.open($event, {sound, index})" v-bind:title="sound.name">{{ sound.name }}</button>
+                        <button class="add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
+                        <button class="delete-btn" v-on:click="workarea.splice(index, 1)" title="ワークエリアから削除">x</button>
+                    </div>
                 </div>
             </draggable>
         </div>
@@ -520,8 +530,10 @@
                 </header>
                 <div class="episode-content">
                     <div class="sound" v-for="(sound, index) in (filtered ? episode.filtered_sounds : episode.sounds)">
-                        <button class="sound-btn" type="button" @click="playSound(sound)" @mousedown.middle.prevent="workarea.push(sound)" @contextmenu.prevent="$refs.sctx.open($event, sound)" title="再生 / ホイールクリックでワークエリアに追加">{{ sound.name }}</button>
-                        <button class="add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
+                        <div v-bind:class="[sound.category == 'Pさん' ? 'yumemip' : '']">
+                            <button class="sound-btn" type="button" @click="playSound(sound)" @mousedown.middle.prevent="workarea.push(sound)" @contextmenu.prevent="$refs.sctx.open($event, sound)" title="再生 / ホイールクリックでワークエリアに追加">{{ sound.name }}</button>
+                            <button class="add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
+                        </div>
                     </div>
                 </div>
             </article>
