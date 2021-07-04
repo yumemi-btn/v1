@@ -568,6 +568,7 @@
             <li class="menuitem" @click="Vue.set(sound, 'mode', 'S')">[S] 次音声と同時再生</li>
             <li class="menuitem" @click="Vue.set(sound, 'mode', '')">同時再生を解除</li>
             <hr>
+            <li class="menuitem" @click="playSoundListADV(playlist.slice(index))">この位置から再生</li>
             <li class="menuitem" @click="playSoundList(playlist.slice(index))">この位置から試聴</li>
             <li class="menuitem" @click="addSoundToPlaylist(sound)">同じものを追加</li>
             <li class="menuitem" @click="workarea.push(sound)">ワークエリアに追加</li>
