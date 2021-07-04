@@ -14,7 +14,7 @@
     </script>
     <meta name="google-site-verification" content="lmaQiF69AsC9ti8OOHnhlaOCH7I5qOgr1EhD2QVTcb4" />
 
-    <meta name="description" content="台湾でねこちゃんに憧れる罵倒ロリママ系VTuber「くもの上ユメミ」ちゃんの非公式ボタンサイトです。かわいいボイスはもちろん、充実の罵倒ボイスがお楽しみいただけます。ざーこざこざこ！へんたい！カウントダウン雑魚もあるよ！">
+    <meta name="description" content="罵倒ロリママねこちゃんなVTuber「くもの上ユメミ」さんの非公式ボタンサイトです。かわいいボイスはもちろん、充実の罵倒ボイスがお楽しみいただけます。ざーこざこざこ！へんたい！カウントダウン雑魚もあるよ！">
 
     <meta name="twitter:card" content="summary">
     <meta name="og:title" content="ユメミボタン">
@@ -405,7 +405,7 @@
     #advmode .character {
         position: absolute;
         bottom: 0;
-        right: 2%;
+        right: 0;
         line-height: 0;
         font-size: 0;
     }
@@ -467,7 +467,7 @@
     <h1>ユメミボタン v1.4.1 <small>-非公式-</small></h1>
     <div id="normalmode" v-show="!advmode">
         <div class="description">
-            台湾でねこちゃんに憧れる罵倒ロリママ系VTuber <a href="https://yumemich.com/" target="_blank">くもの上ユメミ</a> <small>(<a href="https://www.youtube.com/channel/UCRUFY2ZCyVOvC-1rJIVZlKg" target="_blank">Youtube</a> <a href="https://twitter.com/Kumonoue_Yumemi" target="_blank">Twitter</a>)</small> ちゃんの非公式ボタンです。<br>
+            罵倒ロリママねこちゃんなVTuber <a href="https://yumemich.com/" target="_blank">くもの上ユメミ</a> <small>(<a href="https://www.youtube.com/channel/UCRUFY2ZCyVOvC-1rJIVZlKg" target="_blank">Youtube</a> <a href="https://twitter.com/Kumonoue_Yumemi" target="_blank">Twitter</a>)</small> さんの非公式ボタンです。<br>
             現在 {{ sound_list.length - 8 }} 個のボイスが登録されてるよ！ボタン右クリック(or <a href="https://github.com/yumemi-btn/v1/archive/master.zip" target="_blank">ZIPで一括</a>)ダウンロードも出来るよ！ <small>(<a href="https://github.com/yumemi-btn/v1/blob/master/README.md" target="_blank">利用規約</a>を読んでね)</small><br>
             Twitterでみんなが作ったプレイリストを探す！ → <a href="https://twitter.com/search?q=%23%E3%83%A6%E3%83%A1%E3%83%9F%E3%83%9C%E3%82%BF%E3%83%B3&src=typed_query&f=live" target="_blank">#ユメミボタン</a> / <a href="https://twitter.com/search?q=%23%E3%83%A6%E3%83%A1%E3%83%9F%E3%83%9C%E3%82%BF%E3%83%B3R&src=typed_query&f=live" target="_blank">#ユメミボタンR</a>
         </div>
@@ -591,13 +591,14 @@
             </div>
         </div>
         <div class="character">
-            <transition name="fade"><img loading="lazy" v-show="['❤', '性癖', 'セリフ'].includes(advmode_category)" src="./assets/advmode/char01.png"></transition>
+            <transition name="fade"><img loading="lazy" v-show="['❤', '性癖', 'セリフ', 'バイノーラル'].includes(advmode_category)" src="./assets/advmode/char01.png"></transition>
             <transition name="fade"><img loading="lazy" v-show="['かわいい'].includes(advmode_category)" src="./assets/advmode/char02.png"></transition>
             <transition name="fade"><img loading="lazy" v-show="['ワード', 'ひとこと', 'ママ', 'その他', 'カウント', '挨拶'].includes(advmode_category)" src="./assets/advmode/char03.png"></transition>
             <transition name="fade"><img loading="lazy" v-show="['てんぱり'].includes(advmode_category)" src="./assets/advmode/char04.png"></transition>
             <transition name="fade"><img loading="lazy" v-show="['効果音'].includes(advmode_category)" src="./assets/advmode/char06.png"></transition>
             <transition name="fade"><img loading="lazy" v-show="['笑い'].includes(advmode_category)" src="./assets/advmode/char07.png"></transition>
             <transition name="fade"><img loading="lazy" v-show="['罵倒', '叩く'].includes(advmode_category)" src="./assets/advmode/char08.png"></transition>
+            <!-- <transition name="fade"><img loading="lazy" v-show="['Pさん'].includes(advmode_category)" src="./assets/advmode/charp01.png"></transition> -->
         </div>
     </div>
 </div>
@@ -728,8 +729,10 @@
 
                     for (const sound of soundlist) {
                         if (!this.advmode) { break; }
-                        this.advmode_messages.push(sound.name)
-                        this.advmode_category = sound.category
+                        if (sound.category != "無音") {
+                            this.advmode_messages.push(sound.name)
+                            this.advmode_category = sound.category
+                        }
                         await this.playSound(sound)
                     }
 
