@@ -152,7 +152,7 @@
         padding: 0.3em 0;
         border: 2px dotted #27BBC8;
         border-width: 2px 0;
-        height: 6em;
+        height: 10em;
         overflow-y: scroll;
         counter-reset: playlist;
     }
@@ -486,7 +486,7 @@
         </div>
         <div id="playlist" class="playlist">
             <div class="playlist_content">
-                <div v-show="!playlist.length">＊プレイリストは空です＊<br>(+)ボタンを押すとプレイリストに追加されます。追加後にドラッグ＆ドロップで並び替えも出来るよ！<br>プレイリストはURLに反映されるので、ブックマークに保存したり、共有したり出来ます！</div>
+                <div v-show="!playlist.length">＊プレイリストは空です＊<br>(+)ボタンを押すとプレイリストに追加されます。追加後にドラッグ＆ドロップで並び替えも出来るよ！<br>プレイリストはURLに反映されるので、ブックマークに保存したり、共有したり出来ます！<br>追加した音声は、右クリックメニューから左右割り振りも可能！</div>
                 <draggable :list="playlist" class="playlist_drag">
                     <div class="sound" v-for="(sound, index) in playlist">
                         <div v-bind:class="[sound.category == 'Pさん' ? 'yumemip' : '']">
