@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>ユメミボタン v1.4.1 - くもの上ユメミ非公式ボタン</title>
+    <title>ユメミボタン v1.5 - くもの上ユメミ非公式ボタン</title>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165266281-1"></script>
     <script>
@@ -464,7 +464,7 @@
 </style>
 
 <div id="app" v-cloak v-bind:class="{ playlist_fixed: playlist_fixed, filtered: filtered }">
-    <h1>ユメミボタン v1.4.1 <small>-非公式-</small></h1>
+    <h1>ユメミボタン v1.5 <small>-非公式-</small></h1>
     <div id="normalmode" v-show="!advmode">
         <div class="description">
             罵倒ロリママねこちゃんなVTuber <a href="https://yumemich.com/" target="_blank">くもの上ユメミ</a> <small>(<a href="https://www.youtube.com/channel/UCRUFY2ZCyVOvC-1rJIVZlKg" target="_blank">Youtube</a> <a href="https://twitter.com/Kumonoue_Yumemi" target="_blank">Twitter</a>)</small> さんの非公式ボタンです。<br>
@@ -715,7 +715,13 @@
                     this.stop = false
                     for (const sound of soundlist) {
                         if (this.stop) { break; }
-                        await this.playSound(sound)
+                        let count = 1
+                        if (sound.category == "無音" && sound.name.match(/ランダム/)) {
+                            count = Math.floor(Math.random() * 10) + 1
+                        }
+                        for (i = 0; i < count; i++) {
+                            await this.playSound(sound)
+                        }
                     }
                 },
                 playSoundListADV: async function (soundlist) {
@@ -733,7 +739,13 @@
                             this.advmode_messages.push(sound.name)
                             this.advmode_category = sound.category
                         }
-                        await this.playSound(sound)
+                        let count = 1
+                        if (sound.category == "無音" && sound.name.match(/ランダム/)) {
+                            count = Math.floor(Math.random() * 10) + 1
+                        }
+                        for (i = 0; i < count; i++) {
+                            await this.playSound(sound)
+                        }
                     }
 
                     if (this.advmode) {

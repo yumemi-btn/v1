@@ -3688,7 +3688,15 @@ const episodes = [
       { id: '990101/05', category: '無音', name: '無音2秒', filepath: './sounds/990101/05-無音2秒.m4a' },
       { id: '990101/06', category: '無音', name: '無音3秒', filepath: './sounds/990101/06-無音3秒.m4a' },
       { id: '990101/07', category: '無音', name: '無音10秒', filepath: './sounds/990101/07-無音10秒.m4a' },
-      { id: '990101/08', category: '無音', name: '無音60秒', filepath: './sounds/990101/08-無音60秒.m4a' }
+      { id: '990101/08', category: '無音', name: '無音60秒', filepath: './sounds/990101/08-無音60秒.m4a' },
+      { id: '990101/61', category: '無音', name: '無音0.25秒＊ランダム01～10', filepath: './sounds/990101/01-無音0.25秒.m4a' },
+      { id: '990101/62', category: '無音', name: '無音0.5秒＊ランダム01～10', filepath: './sounds/990101/02-無音0.5秒.m4a' },
+      { id: '990101/63', category: '無音', name: '無音0.75秒＊ランダム01～10', filepath: './sounds/990101/03-無音0.75秒.m4a' },
+      { id: '990101/64', category: '無音', name: '無音1秒＊ランダム01～10', filepath: './sounds/990101/04-無音1秒.m4a' },
+      { id: '990101/65', category: '無音', name: '無音2秒＊ランダム01～10', filepath: './sounds/990101/05-無音2秒.m4a' },
+      { id: '990101/66', category: '無音', name: '無音3秒＊ランダム01～10', filepath: './sounds/990101/06-無音3秒.m4a' },
+      { id: '990101/67', category: '無音', name: '無音10秒＊ランダム01～10', filepath: './sounds/990101/07-無音10秒.m4a' },
+      { id: '990101/68', category: '無音', name: '無音60秒＊ランダム01～10', filepath: './sounds/990101/08-無音60秒.m4a' }
     ]
   },
   {
