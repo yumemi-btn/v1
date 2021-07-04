@@ -727,6 +727,7 @@
                         (new Howl({
                             src: sound.filepath,
                             stereo: pan,
+                            volume: sound.stereo ? 0.7 : 1,
                             onend: () => {
                                 resolve()
                             }
