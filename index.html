@@ -27,7 +27,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.10.2/Sortable.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuedraggable@2.23.2/dist/vuedraggable.umd.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue-context-menu@2.0.6/vue-context-menu.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/howler@2.2.0/dist/howler.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/howler@2.2.1/dist/howler.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/howler@2.2.1/dist/howler.spatial.min.js" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
 
@@ -489,7 +490,7 @@
                 <draggable :list="playlist" class="playlist_drag">
                     <div class="sound" v-for="(sound, index) in playlist">
                         <div v-bind:class="[sound.category == 'Pさん' ? 'yumemip' : '']">
-                            <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="playlist.splice(index, 1)" title="再生 / ホイールクリックで削除" @contextmenu.prevent="$refs.pctx.open($event, {sound, index})">{{ sound.name }}</button>
+                            <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="playlist.splice(index, 1)" title="再生 / ホイールクリックで削除" @contextmenu.prevent="$refs.pctx.open($event, {sound, index})">{{ (sound.stereo ? `[${sound.stereo}] ` : '') + (sound.mode ? `[${sound.mode}] ` : '') + sound.name }}</button>
                             <button class="delete-btn" v-on:click="playlist.splice(index, 1)" title="プレイリストから削除">x</button>
                         </div>
                     </div>
@@ -512,7 +513,7 @@
                 <div class="sound" v-for="(sound, index) in workarea">
                     <div v-bind:class="[sound.category == 'Pさん' ? 'yumemip' : '']">
                         <button class="sound-btn" v-on:click="playSound(sound)" @mousedown.middle.prevent="workarea.splice(index, 1)" @contextmenu.prevent="$refs.wctx.open($event, {sound, index})" v-bind:title="sound.name">{{ sound.name }}</button>
-                        <button class="add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
+                        <button class="add-btn" v-on:click="addSoundToPlaylist(sound)" title="プレイリストに追加">+</button>
                         <button class="delete-btn" v-on:click="workarea.splice(index, 1)" title="ワークエリアから削除">x</button>
                     </div>
                 </div>
@@ -532,7 +533,7 @@
                     <div class="sound" v-for="(sound, index) in (filtered ? episode.filtered_sounds : episode.sounds)">
                         <div v-bind:class="[sound.category == 'Pさん' ? 'yumemip' : '']">
                             <button class="sound-btn" type="button" @click="playSound(sound)" @mousedown.middle.prevent="workarea.push(sound)" @contextmenu.prevent="$refs.sctx.open($event, sound)" title="再生 / ホイールクリックでワークエリアに追加">{{ sound.name }}</button>
-                            <button class="add-btn" v-on:click="playlist.push(sound)" title="プレイリストに追加">+</button>
+                            <button class="add-btn" v-on:click="addSoundToPlaylist(sound)" title="プレイリストに追加">+</button>
                         </div>
                     </div>
                 </div>
@@ -561,8 +562,13 @@
         <a download id="downloadLink" style="display:none;"></a>
 
         <context-menu class="context-menu" ref="pctx" @ctx-open="(event) => {this.sound = event.sound; this.index = event.index}">
+            <li class="menuitem" @click="Vue.set(sound, 'stereo', 'L')">[L] 左に割り振り</li>
+            <li class="menuitem" @click="Vue.set(sound, 'stereo', 'R')">[R] 右に割り振り</li>
+            <li class="menuitem" @click="Vue.set(sound, 'mode', 'S')">[S] 次音声と同時再生</li>
+            <li class="menuitem" @click="Vue.set(sound, 'mode', '')">同時再生を解除</li>
+            <hr>
             <li class="menuitem" @click="playSoundList(playlist.slice(index))">この位置から試聴</li>
-            <li class="menuitem" @click="playlist.push(sound)">同じものを追加</li>
+            <li class="menuitem" @click="addSoundToPlaylist(sound)">同じものを追加</li>
             <li class="menuitem" @click="workarea.push(sound)">ワークエリアに追加</li>
             <hr>
             <li class="menuitem" @click="openSoundDetail(sound)">詳細ページを開く</li>
@@ -598,7 +604,7 @@
             <transition name="fade"><img loading="lazy" v-show="['効果音'].includes(advmode_category)" src="./assets/advmode/char06.png"></transition>
             <transition name="fade"><img loading="lazy" v-show="['笑い'].includes(advmode_category)" src="./assets/advmode/char07.png"></transition>
             <transition name="fade"><img loading="lazy" v-show="['罵倒', '叩く'].includes(advmode_category)" src="./assets/advmode/char08.png"></transition>
-            <!-- <transition name="fade"><img loading="lazy" v-show="['Pさん'].includes(advmode_category)" src="./assets/advmode/charp01.png"></transition> -->
+            <transition name="fade"><img loading="lazy" v-show="['Pさん'].includes(advmode_category)" src="./assets/advmode/charp01.png"></transition>
         </div>
     </div>
 </div>
@@ -659,7 +665,12 @@
             },
             watch: {
                 playlist: function () {
-                    location.hash = this.playlist.map(sound => sound.id).join(',')
+                    location.hash = this.playlist.map(sound => {
+                        let sound_save = sound.id
+                        if (sound.stereo) { sound_save = sound_save + sound.stereo }
+                        if (sound.mode) { sound_save = sound.mode + sound_save }
+                        return sound_save
+                    }).join(',')
                 },
                 querys: function () {
                     if (!this.querys) { return }
@@ -703,12 +714,20 @@
             methods: {
                 playSound: async function (sound) {
                     return new Promise(resolve => {
+                        let pan = 0
+
+                        if (sound.stereo == 'L') { pan = -0.7 }
+                        if (sound.stereo == 'R') { pan = 0.7 }
+
                         (new Howl({
                             src: sound.filepath,
+                            stereo: pan,
                             onend: () => {
                                 resolve()
                             }
                         })).play()
+
+                        if (sound.mode == 'S') { resolve() }
                     })
                 },
                 playSoundList: async function (soundlist) {
@@ -737,7 +756,10 @@
                         if (!this.advmode) { break; }
                         if (sound.category != "無音") {
                             this.advmode_messages.push(sound.name)
-                            this.advmode_category = sound.category
+
+                            if (sound.mode != "S") {
+                                this.advmode_category = sound.category
+                            }
                         }
                         let count = 1
                         if (sound.category == "無音" && sound.name.match(/ランダム/)) {
@@ -760,13 +782,22 @@
                 setCategory: function (category) {
                     this.category = category
                 },
+                addSoundToPlaylist: function (sound) {
+                    this.playlist.push({ ...sound })
+                },
                 loadPlaylist: function () {
                     try {
                         if (location.hash) {
                             let sound_ids = location.hash.slice(1).split(',')
 
                             this.playlist = sound_ids.map(id => {
-                                return this.sound_list.find(sound => sound.id === id);
+                                let sound = this.sound_list.find(sound => sound.id === id.replace(/[RLS]/g, ''))
+                                if (!sound) { return false }
+                                sound = { ...sound }
+                                if (id.match(/L$/)) { sound.stereo = 'L' }
+                                if (id.match(/R$/)) { sound.stereo = 'R' }
+                                if (id.match(/^S/)) { sound.mode = 'S' }
+                                return sound
                             }).filter(Boolean)
                         }
                     } catch (e) {
