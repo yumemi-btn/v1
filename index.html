@@ -564,6 +564,7 @@
         <context-menu class="context-menu" ref="pctx" @ctx-open="(event) => {this.sound = event.sound; this.index = event.index}">
             <li class="menuitem" @click="Vue.set(sound, 'stereo', 'L')">[L] 左に割り振り</li>
             <li class="menuitem" @click="Vue.set(sound, 'stereo', 'R')">[R] 右に割り振り</li>
+            <li class="menuitem" @click="Vue.set(sound, 'stereo', '')">割り振りを解除</li>
             <li class="menuitem" @click="Vue.set(sound, 'mode', 'S')">[S] 次音声と同時再生</li>
             <li class="menuitem" @click="Vue.set(sound, 'mode', '')">同時再生を解除</li>
             <hr>
@@ -604,7 +605,7 @@
             <transition name="fade"><img loading="lazy" v-show="['効果音'].includes(advmode_category)" src="./assets/advmode/char06.png"></transition>
             <transition name="fade"><img loading="lazy" v-show="['笑い'].includes(advmode_category)" src="./assets/advmode/char07.png"></transition>
             <transition name="fade"><img loading="lazy" v-show="['罵倒', '叩く'].includes(advmode_category)" src="./assets/advmode/char08.png"></transition>
-            <transition name="fade"><img loading="lazy" v-show="['Pさん'].includes(advmode_category)" src="./assets/advmode/charp01.png"></transition>
+            <!-- <transition name="fade"><img loading="lazy" v-show="['Pさん'].includes(advmode_category)" src="./assets/advmode/charp01.png"></transition> -->
         </div>
     </div>
 </div>
@@ -664,13 +665,16 @@
                 }
             },
             watch: {
-                playlist: function () {
-                    location.hash = this.playlist.map(sound => {
-                        let sound_save = sound.id
-                        if (sound.stereo) { sound_save = sound_save + sound.stereo }
-                        if (sound.mode) { sound_save = sound.mode + sound_save }
-                        return sound_save
-                    }).join(',')
+                playlist: {
+                    handler() {
+                        location.hash = this.playlist.map(sound => {
+                            let sound_save = sound.id
+                            if (sound.stereo) { sound_save = sound_save + sound.stereo }
+                            if (sound.mode) { sound_save = sound.mode + sound_save }
+                            return sound_save
+                        }).join(',')
+                    },
+                    deep: true
                 },
                 querys: function () {
                     if (!this.querys) { return }
